@@ -200,7 +200,7 @@ class ModelCustomerCustomer extends Model {
 		if ($for_count) {
 		    $sql = "SELECT count(*) as total ";
 		} else {
-		    $sql = "SELECT *";
+		    $sql = "SELECT *, traded_money/traded_num AS unit";
 		}
 
 		$sql .= " FROM users WHERE TRUE"; 
@@ -229,7 +229,7 @@ class ModelCustomerCustomer extends Model {
 		    $sql .= " AND LCASE(sex) LIKE '%" . $this->db->escape($params['filter_sex']) . "%'";
 		}
 
-		if (empty($params['sort'])) {
+		if (empty($params['sort']) || $for_count) {
 		    $sql .= " ORDER BY id ASC";
 		} else {
 		    $sql .= " ORDER BY " . $params['sort'] . " DESC";

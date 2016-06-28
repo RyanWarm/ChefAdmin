@@ -76,34 +76,26 @@ class ControllerCustomerCustomer extends Controller {
 			$params['filter_id'] = $this->request->get['filter_id'];
 		}
 
-		if (isset($this->request->get['filter_name'])) {
-			$params['filter_name'] = $this->request->get['filter_name'];
+		if (isset($this->request->get['filter_alias'])) {
+			$params['filter_alias'] = $this->request->get['filter_alias'];
 		}
 
-		if (isset($this->request->get['filter_location'])) {
-			$params['filter_location'] = $this->request->get['filter_location'];
+		if (isset($this->request->get['filter_mobile'])) {
+			$params['filter_mobile'] = $this->request->get['filter_mobile'];
 		}
 
-		if (isset($this->request->get['filter_domain'])) {
-			$params['filter_domain'] = $this->request->get['filter_domain'];
+		if (isset($this->request->get['filter_community'])) {
+			$params['filter_community'] = $this->request->get['filter_community'];
 		}
 
-		if (isset($this->request->get['filter_category'])) {
-			$params['filter_category'] = $this->request->get['filter_category'];
+		if (isset($this->request->get['filter_address'])) {
+			$params['filter_address'] = $this->request->get['filter_address'];
 		}
 
-		if (isset($this->request->get['filter_cities'])) {
-			$params['filter_cities'] = $this->request->get['filter_cities'];
+		if (isset($this->request->get['filter_sex'])) {
+			$params['filter_sex'] = $this->request->get['filter_sex'];
 		}
 
-		if (isset($this->request->get['sort'])) {
-           		 $params['sort'] = $this->request->get['sort'];
-		}
-
-		if (isset($this->request->get['order'])) {
-            		$params['order'] = $this->request->get['order'];
-		}
-        
         	return $params;
     	}
 
@@ -148,24 +140,23 @@ class ControllerCustomerCustomer extends Controller {
 
 		$this->config->set('config_admin_limit', 20);
 
-		error_log("Inside index");
 		$filter_id = $this->request->get('filter_id');
 		$this->data['filter_id'] = $filter_id;
 
-		$filter_name = $this->request->get('filter_name');
-		$this->data['filter_name'] = $filter_name;
+		$filter_alias = $this->request->get('filter_alias');
+		$this->data['filter_alias'] = $filter_alias;
 
-		$filter_location = $this->request->get('filter_location');
-		$this->data['filter_location'] = $filter_location;
+		$filter_mobile = $this->request->get('filter_mobile');
+		$this->data['filter_mobile'] = $filter_mobile;
 
-		$filter_domain = $this->request->get('filter_domain');
-		$this->data['filter_domain'] = $filter_domain;
+		$filter_community = $this->request->get('filter_community');
+		$this->data['filter_community'] = $filter_community;
 
-		$filter_category = $this->request->get('filter_category');
-		$this->data['filter_category'] = $filter_category;
+		$filter_address = $this->request->get('filter_address');
+		$this->data['filter_address'] = $filter_address;
 
-		$filter_cities = $this->request->get('filter_cities');
-		$this->data['filter_cities'] = $filter_cities;
+		$filter_sex = $this->request->get('filter_sex');
+		$this->data['filter_sex'] = $filter_sex;
 
 		$sort = $this->request->get('sort');
 			
@@ -196,14 +187,14 @@ class ControllerCustomerCustomer extends Controller {
 		$this->data['insert'] = $this->url->link('customer/customer/insert', http_build_query($url_params), 'SSL');
 		$this->data['delete'] = $this->url->link('customer/customer/delete', http_build_query($url_params), 'SSL');
 
-        // query data
+        	// query data
 		$query_params = array(
                               'filter_id' => $filter_id,
-                              'filter_name' => $filter_name,
-                              'filter_location' => $filter_location,
-                              'filter_domain' => $filter_domain,
-                              'filter_category' => $filter_category,
-                              'filter_cities' => $filter_cities,
+                              'filter_alias' => $filter_alias,
+                              'filter_mobile' => $filter_mobile,
+                              'filter_community' => $filter_community,
+                              'filter_address' => $filter_address,
+                              'filter_sex' => $filter_sex,
                               'sort' => $sort,
                               'order' => $order,
                               'start' => ($page-1) * $this->config->get('config_admin_limit'),
@@ -224,10 +215,10 @@ class ControllerCustomerCustomer extends Controller {
 				'href' => $this->url->link('customer/customer/update', http_build_query( array_merge( array('id' => $result['id'] ),  $url_params)), 'SSL')
 			);
 
-            $this->data['list'][] = array_merge(
-                $result, 
-                array('selected' => isset($this->request->post['selected']) && in_array($result['zid'], $this->request->post['selected']), 
-                      'action' => $action));
+            		$this->data['list'][] = array_merge(
+                		$result, 
+                		array('selected' => isset($this->request->post['selected']) && in_array($result['zid'], $this->request->post['selected']), 
+                      		'action' => $action));
 		}
 
         // render page list

@@ -27,7 +27,7 @@
               <td class="left">电话</td>
               <td class="left"><a href="index.php?route=customer/customer&sort=traded_num">订单数量↓</a></td>
               <td class="left"><a href="index.php?route=customer/customer&sort=traded_money">订单总额↓</a></td>
-              <td class="left">单价</td>
+              <td class="left"><a href="index.php?route=customer/customer&sort=unit">单价↓</a></td>
               <td class="left">小区</td>
               <td class="left">地址</td>
               <td class="left"><a href="index.php?route=customer/customer&sort=join_time">加入时间↓</a></td>
@@ -63,7 +63,7 @@
               <td class="left"><?php echo $item['mobile']; ?></td>
               <td class="left"><?php echo $item['traded_num']; ?></td>
               <td class="left"><?php echo $item['traded_money']; ?></td>        
-              <td class="left"><?php echo number_format($item['traded_money']/$item['traded_num'], 2); ?></td>
+              <td class="left"><?php echo number_format($item['unit'], 2); ?></td>
               <td class="left"><?php echo $item['community']; ?></td>
               <td class="left"><?php echo $item['address']; ?></td>
               <td class="left"><?php echo $item['join_time']; ?></td>
