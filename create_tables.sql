@@ -23,10 +23,10 @@ USE 'chef';
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bookings`
+-- Table structure for table `orders`
 --
 
-CREATE TABLE IF NOT EXISTS `bookings` (
+CREATE TABLE IF NOT EXISTS `orders` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `menu_id` int(11) NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `bookings` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `bookings`
+-- Dumping data for table `orders`
 --
 
 
@@ -111,6 +111,7 @@ CREATE TABLE IF NOT EXISTS `menus` (
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `open_id` varchar(100) NOT NULL,
+  `youzan_id` varchar(100) NOT NULL,
   `alias` varchar(50) NOT NULL,
   `mobile` varchar(20) DEFAULT NULL,
   `community` varchar(30) DEFAULT NULL,
