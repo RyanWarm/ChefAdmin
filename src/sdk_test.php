@@ -6,7 +6,7 @@ $appSecret = '82778e43a9dbb94b0b75616526e22747';
 $client = new KdtApiClient($appId, $appSecret);
 
 
-$method = 'kdt.item.update';
+$method = 'kdt.shop.basic.get';
 $params = [
 	'num_iid' => 78552,
 	
@@ -14,7 +14,7 @@ $params = [
 	'desc' => 'description here',
 	'post_fee' => 0.2,
 ];
-
+/**
 $files = [
 	[
 		'url' => __DIR__ . '/file1.png',
@@ -25,10 +25,10 @@ $files = [
 		'field' => 'images[]',
 	],
 ];
-
+*/
 
 echo '<pre>';
 var_dump( 
-	$client->post($method, $params, $files)
+	$client->post($method, $params)
 );
 echo '</pre>';

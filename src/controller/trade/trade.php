@@ -1,69 +1,69 @@
 <?php 
-class ControllerCustomerCustomer extends Controller { 
+class ControllerTradeTrade extends Controller { 
 	private $error = array();
  
 	public function index() {
-		$this->load->language('customer/customer');
+		$this->load->language('trade/trade');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 		
-		$this->load->model('customer/customer');
+		$this->load->model('trade/trade');
 		 
 		$this->getList();
 	}
 
 	public function insert() {
-		$this->load->language('customer/customer');
+		$this->load->language('trade/trade');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 		
-		$this->load->model('customer/customer');
+		$this->load->model('trade/trade');
 		
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_customer_customer->add($this->request->post);
+			$this->model_trade_trade->add($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 			
-			$this->redirect($this->url->link('customer/customer', 'token=' . $this->session->data['token'], 'SSL')); 
+			$this->redirect($this->url->link('trade/trade', 'token=' . $this->session->data['token'], 'SSL')); 
 		}
 
 		$this->getForm();
 	}
 
 	public function update() {
-		$this->load->language('customer/customer');
+		$this->load->language('trade/trade');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 		
-		$this->load->model('customer/customer');
+		$this->load->model('trade/trade');
 		
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_customer_customer->edit($this->request->get['id'], $this->request->post);
+			$this->model_trade_trade->edit($this->request->get['id'], $this->request->post);
 			
 			$this->session->data['success'] = $this->language->get('text_success');
 			
             		$url_params = $this->generatePagingURLParams();
-			$this->redirect($this->url->link('customer/customer', http_build_query($url_params), 'SSL'));
+			$this->redirect($this->url->link('trade/trade', http_build_query($url_params), 'SSL'));
 		}
 
 		$this->getForm(1);
 	}
 
 	public function delete() {
-		$this->load->language('customer/customer');
+		$this->load->language('trade/trade');
 
 		$this->document->setTitle($this->language->get('heading_title'));
 		
-		$this->load->model('customer/customer');
+		$this->load->model('trade/trade');
 		
 		if (isset($this->request->post['selected']) && $this->validateDelete()) {
-			foreach ($this->request->post['selected'] as $customer_id) {
-				$this->model_customer_customer($customer_id);
+			foreach ($this->request->post['selected'] as $trade_id) {
+				$this->model_trade_trade($trade_id);
 			}
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
-			$this->redirect($this->url->link('customer/customer', 'token=' . $this->session->data['token'], 'SSL'));
+			$this->redirect($this->url->link('trade/trade', 'token=' . $this->session->data['token'], 'SSL'));
 		}
 
 		$this->getList();
@@ -94,10 +94,6 @@ class ControllerCustomerCustomer extends Controller {
 
 		if (isset($this->request->get['filter_sex'])) {
 			$params['filter_sex'] = $this->request->get['filter_sex'];
-		}
-
-		if (isset($this->request->get['sort'])) {
-			$params['sort'] = $this->request->get['sort'];
 		}
 
         	return $params;
@@ -184,12 +180,12 @@ class ControllerCustomerCustomer extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('customer/customer', http_build_query($url_params), 'SSL'),
+			'href'      => $this->url->link('trade/trade', http_build_query($url_params), 'SSL'),
       			'separator' => ' :: '
    		);
 									
-		$this->data['insert'] = $this->url->link('customer/customer/insert', http_build_query($url_params), 'SSL');
-		$this->data['delete'] = $this->url->link('customer/customer/delete', http_build_query($url_params), 'SSL');
+		$this->data['insert'] = $this->url->link('trade/trade/insert', http_build_query($url_params), 'SSL');
+		$this->data['delete'] = $this->url->link('trade/trade/delete', http_build_query($url_params), 'SSL');
 
         	// query data
 		$query_params = array(
@@ -205,7 +201,7 @@ class ControllerCustomerCustomer extends Controller {
                               'limit' => $this->config->get('config_admin_limit')
                               );
        		
- 		$results = $this->model_customer_customer->getList($query_params);
+ 		$results = $this->model_trade_trade->getList($query_params);
 
 		$this->data['list'] = array();
 
@@ -216,7 +212,7 @@ class ControllerCustomerCustomer extends Controller {
 			
 			$action[] = array(
 				'text' => $this->language->get('text_edit'),
-				'href' => $this->url->link('customer/customer/update', http_build_query( array_merge( array('id' => $result['id'] ),  $url_params)), 'SSL')
+				'href' => $this->url->link('trade/trade/update', http_build_query( array_merge( array('id' => $result['id'] ),  $url_params)), 'SSL')
 			);
 
             		$this->data['list'][] = array_merge(
@@ -229,16 +225,16 @@ class ControllerCustomerCustomer extends Controller {
         $page_url_params = $this->generateURL();
 
 		$pagination = new Pagination();
-		$pagination->total = $this->model_customer_customer->getTotalCount($query_params);
+		$pagination->total = $this->model_trade_trade->getTotalCount($query_params);
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('customer/customer', http_build_query($page_url_params) . "&page={page}", 'SSL');
+		$pagination->url = $this->url->link('trade/trade', http_build_query($page_url_params) . "&page={page}", 'SSL');
 
 		$this->data['pagination'] = $pagination->render();
 		
         // output
-		$this->template = 'customer/customer_list.tpl';
+		$this->template = 'trade/trade_list.tpl';
 		$this->children = array(
 			'common/header',
 			'common/footer'
@@ -306,18 +302,18 @@ class ControllerCustomerCustomer extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('customer/customer', http_build_query($url_params), 'SSL'),
+			'href'      => $this->url->link('trade/trade', http_build_query($url_params), 'SSL'),
       			'separator' => ' :: '
    		);
 		
 		if (!isset($this->request->get['id'])) {
-			$this->data['action'] = $this->url->link('customer/customer/insert', null, 'SSL');
+			$this->data['action'] = $this->url->link('trade/trade/insert', null, 'SSL');
 		} else {
-			$this->data['action'] = $this->url->link('customer/customer/update', http_build_query(array_merge( array('id' =>  $this->request->get['id'] ), $url_params)) , 'SSL');
+			$this->data['action'] = $this->url->link('trade/trade/update', http_build_query(array_merge( array('id' =>  $this->request->get['id'] ), $url_params)) , 'SSL');
 		}
 
 		
-		$this->data['cancel'] = $this->url->link('customer/customer', http_build_query($url_params), 'SSL');
+		$this->data['cancel'] = $this->url->link('trade/trade', http_build_query($url_params), 'SSL');
 
 		$this->data['token'] = $this->session->data['token'];
 
@@ -328,7 +324,7 @@ class ControllerCustomerCustomer extends Controller {
 
         	// data
         	if (isset($this->request->get['id']) && ($fromInternal == 1 || $this->request->server['REQUEST_METHOD'] != 'POST')) {
-            		$item_info = $this->model_customer_customer->getItem($this->request->get['id']);
+            		$item_info = $this->model_trade_trade->getItem($this->request->get['id']);
         	} else {
             		$item_info = null;
         	}
@@ -361,7 +357,7 @@ class ControllerCustomerCustomer extends Controller {
 			}
 		}
 
-		$this->template = 'customer/customer_form.tpl';
+		$this->template = 'trade/trade_form.tpl';
 		$this->children = array(
 			'common/header',
 			'common/footer'
@@ -371,7 +367,7 @@ class ControllerCustomerCustomer extends Controller {
 	}
 
 	private function validateForm() {
-		if (!$this->user->hasPermission('modify', 'customer/customer')) {
+		if (!$this->user->hasPermission('modify', 'trade/trade')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
