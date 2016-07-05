@@ -198,9 +198,9 @@ class ModelTradeTrade extends Model {
 	
 	private function createQueryString($params, $for_count) {
 		if ($for_count) {
-		    $sql = "SELECT count(*) as total ";
+		    $sql = "SELECT count(*) as total";
 		} else {
-		    $sql = "SELECT *, traded_money/traded_num AS unit";
+		    $sql = "SELECT *";
 		}
 
 		$sql .= " FROM trades WHERE TRUE"; 
@@ -209,24 +209,20 @@ class ModelTradeTrade extends Model {
 		    $sql .= " AND LCASE(id) LIKE '%" . $this->db->escape($params['filter_id']) . "%'";
 		}
 
-		if (!empty($params['filter_alias']) && $params['filter_alias'] != 'all') {
-		    $sql .= " AND LCASE(alias) LIKE '%" . $this->db->escape($params['filter_alias']) . "%'";
+		if (!empty($params['filter_youzan_id']) && $params['filter_youzan_id'] != 'all') {
+		    $sql .= " AND LCASE(youzan_id) LIKE '%" . $this->db->escape($params['filter_youzan_id']) . "%'";
 		}
 
-		if (!empty($params['filter_mobile'])) {
-		    $sql .= " AND LCASE(mobile) LIKE '%" . $this->db->escape($params['filter_mobile']) . "%'";
+		if (!empty($params['filter_pay_type'])) {
+		    $sql .= " AND LCASE(pay_type) LIKE '%" . $this->db->escape($params['filter_pay_type']) . "%'";
 		}
 
-		if (!empty($params['filter_community'])) {
-		    $sql .= " AND LCASE(community) LIKE '%" . $this->db->escape($params['filter_community']) . "%'";
+		if (!empty($params['filter_message'])) {
+		    $sql .= " AND LCASE(message) LIKE '%" . $this->db->escape($params['filter_message']) . "%'";
 		}
 
-		if (!empty($params['filter_address'])) {
-		    $sql .= " AND LCASE(address) LIKE '%" . $this->db->escape($params['filter_address']) . "%'";
-		}
-
-		if (!empty($params['filter_sex'])) {
-		    $sql .= " AND LCASE(sex) LIKE '%" . $this->db->escape($params['filter_sex']) . "%'";
+		if (!empty($params['filter_status'])) {
+		    $sql .= " AND LCASE(status) LIKE '%" . $this->db->escape($params['filter_status']) . "%'";
 		}
 
 		if (empty($params['sort']) || $for_count) {

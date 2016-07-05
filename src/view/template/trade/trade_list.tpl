@@ -13,7 +13,7 @@
   <?php } ?>
   <div class="box">
     <div class="heading">
-      <h1><img src="view/image/category.png" alt="" />当前客户</h1>
+      <h1><img src="view/image/category.png" alt="" />当前交易</h1>
       <div class="buttons"><a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $button_insert; ?></a></div>
     </div>
     <div class="content">
@@ -22,16 +22,17 @@
           <thead>
             <tr>
               <td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
-              <td class="left">id</td>
-              <td class="left">别名</td>
-              <td class="left">电话</td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=traded_num">订单数量↓</a></td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=traded_money">订单总额↓</a></td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=unit">单价↓</a></td>
-              <td class="left">小区</td>
-              <td class="left">地址</td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=join_time">加入时间↓</a></td>
-              <td class="left">性别</td>
+              <td class="left">ID</td>
+              <td class="left">用户ID</td>
+              <td class="left"><a href="index.php?route=customer/customer&sort=order_num">菜品数量↓</a></td>
+              <td class="left">支付类型</td>
+              <td class="left"><a href="index.php?route=customer/customer&sort=post_fee">送餐费用↓</a></td>
+              <td class="left"><a href="index.php?route=customer/customer&sort=payment">支付金额↓</a></td>
+              <td class="left"><a href="index.php?route=customer/customer&sort=discount">折扣↓</a></td>
+              <td class="left"><a href="index.php?route=customer/customer&sort=total_fee">总价↓</a></td>
+              <td class="left"><a href="index.php?route=customer/customer&sort=consign_time">交易时间↓</a></td>
+              <td class="left">留言</td>
+              <td class="left">订单状态</td>
               <td class="right"><?php echo $column_action; ?></td>
             </tr>
           </thead>
@@ -39,15 +40,16 @@
             <tr class="filter">
               <td></td>
               <td><input type="text" style="width: 40px;" name="filter_id" value="<?php echo $filter_id; ?>" /></td>
-              <td><input type="text" style="width: 100px;" name="filter_alias" value="<?php echo $filter_alias; ?>" /></td>
-              <td><input type="text" style="width: 100px;" name="filter_mobile" value="<?php echo $filter_mobile; ?>" /></td>
+              <td><input type="text" style="width: 100px;" name="filter_youzan_id" value="<?php echo $filter_youzan_id; ?>" /></td>
+              <td></td>
+              <td><input type="text" style="width: 100px;" name="filter_pay_type" value="<?php echo $filter_pay_type; ?>" /></td>
               <td></td>
               <td></td>
               <td></td>
-              <td><input type="text" style="width: 100px;" name="filter_community" value="<?php echo $filter_community; ?>" /></td>
-              <td><input type="text" style="width: 100px;" name="filter_address" value="<?php echo $filter_address; ?>" /></td>
               <td></td>
-              <td><input type="text" style="width: 140px;" name="filter_sex" value="<?php echo $filter_sex; ?>" /></td>
+              <td></td>
+              <td><input type="text" style="width: 100px;" name="filter_message" value="<?php echo $filter_message; ?>" /></td>
+              <td><input type="text" style="width: 100px;" name="filter_status" value="<?php echo $filter_status; ?>" /></td>
               <td align="right"><a onclick="filter();" class="button">筛选</a></td>
             </tr>
             <?php if ($list) { ?>
@@ -59,15 +61,16 @@
                 <input type="checkbox" name="selected[]" value="<?php echo $item['id']; ?>" />
                 <?php } ?></td>
               <td class="left"><?php echo $item['id']; ?></td>
-              <td class="left"><?php echo $item['alias']; ?></td>
-              <td class="left"><?php echo $item['mobile']; ?></td>
-              <td class="left"><?php echo $item['traded_num']; ?></td>
-              <td class="left"><?php echo $item['traded_money']; ?></td>        
-              <td class="left"><?php echo number_format($item['unit'], 2); ?></td>
-              <td class="left"><?php echo $item['community']; ?></td>
-              <td class="left"><?php echo $item['address']; ?></td>
-              <td class="left"><?php echo $item['join_time']; ?></td>
-              <td class="left"><?php echo $item['sex']; ?></td>
+              <td class="left"><?php echo $item['youzan_id']; ?></td>
+              <td class="left"><?php echo $item['order_num']; ?></td>
+              <td class="left"><?php echo $item['pay_type']; ?></td>
+              <td class="left"><?php echo $item['post_fee']; ?></td>        
+              <td class="left"><?php echo $item['payment']; ?></td>
+              <td class="left"><?php echo $item['discount']; ?></td>
+              <td class="left"><?php echo $item['total_fee']; ?></td>
+              <td class="left"><?php echo $item['consign_time']; ?></td>
+              <td class="left"><?php echo $item['message']; ?></td>
+              <td class="left"><?php echo $item['status']; ?></td>
               <td class="right"><?php foreach ($item['action'] as $action) { ?>
                 [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
                 <?php } ?></td>
@@ -100,32 +103,27 @@ function filter() {
 		url += '&filter_id=' + encodeURIComponent(filter_id);
 	}
 
-	var filter_alias = $('input[name=\'filter_alias\']').attr('value');
-	if (filter_alias) {
-		url += '&filter_alias=' + encodeURIComponent(filter_alias);
+	var filter_youzan_id = $('input[name=\'filter_youzan_id\']').attr('value');
+	if (filter_youzan_id) {
+		url += '&filter_youzan_id=' + encodeURIComponent(filter_youzan_id);
 	}
 
-	var filter_mobile = $('input[name=\'filter_mobile\']').attr('value');
-	if (filter_mobile) {
-		url += '&filter_mobile=' + encodeURIComponent(filter_mobile);
+	var filter_pay_type = $('input[name=\'filter_pay_type\']').attr('value');
+	if (filter_pay_type) {
+		url += '&filter_pay_type=' + encodeURIComponent(filter_pay_type);
 	}
 
-	var filter_community = $('input[name=\'filter_community\']').attr('value');
-	if (filter_community) {
-		url += '&filter_community=' + encodeURIComponent(filter_community);
+	var filter_message = $('input[name=\'filter_message\']').attr('value');
+	if (filter_message) {
+		url += '&filter_message=' + encodeURIComponent(filter_message);
 	}
 
-	var filter_address = $('input[name=\'filter_address\']').attr('value');
-	if (filter_address) {
-		url += '&filter_address=' + encodeURIComponent(filter_address);
+	var filter_status = $('input[name=\'filter_status\']').attr('value');
+	if (filter_status) {
+		url += '&filter_status=' + encodeURIComponent(filter_status);
 	}
 
-	var filter_sex = $('input[name=\'filter_sex\']').attr('value');
-	if (filter_sex) {
-		url += '&filter_sex=' + encodeURIComponent(filter_sex);
-	}
-
-    	location = url;
+  location = url;
 }
 
 </script>
