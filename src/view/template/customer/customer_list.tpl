@@ -32,7 +32,7 @@
               <td class="left">地址</td>
               <td class="left"><a href="index.php?route=customer/customer&sort=join_time">加入时间↓</a></td>
               <td class="left">性别</td>
-              <td class="left">Trades</td>
+              <td class="left">交易</td>
               <td class="right"><?php echo $column_action; ?></td>
             </tr>
           </thead>
@@ -70,7 +70,7 @@
               <td class="left"><?php echo $item['address']; ?></td>
               <td class="left"><?php echo $item['join_time']; ?></td>
               <td class="left"><?php echo $item['sex']; ?></td>
-              <td class="left"><a target="_blank" href="index.php?route=trade/trade&filter_youzan_id=<?php echo $item['youzan_id']; ?>">All Trades</a></td>
+              <td class="left"><a target="_blank" href="index.php?route=trade/trade&filter_youzan_id=<?php echo $item['youzan_id']; ?>">所有交易</a></td>
               <td class="right"><?php foreach ($item['action'] as $action) { ?>
                 [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
                 <?php } ?></td>

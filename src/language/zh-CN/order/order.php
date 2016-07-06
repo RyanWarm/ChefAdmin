@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']              = '客户查询'; 
+$_['heading_title']              = '菜品订单查询'; 
 
 // Tab
 $_['tab_shipping']               = '配送';

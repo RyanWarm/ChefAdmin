@@ -76,28 +76,20 @@ class ControllerOrderOrder extends Controller {
 			$params['filter_id'] = $this->request->get['filter_id'];
 		}
 
-		if (isset($this->request->get['filter_alias'])) {
-			$params['filter_alias'] = $this->request->get['filter_alias'];
+		if (isset($this->request->get['filter_name'])) {
+			$params['filter_name'] = $this->request->get['filter_name'];
 		}
 
-		if (isset($this->request->get['filter_mobile'])) {
-			$params['filter_mobile'] = $this->request->get['filter_mobile'];
+		if (isset($this->request->get['filter_state'])) {
+			$params['filter_state'] = $this->request->get['filter_state'];
 		}
 
-		if (isset($this->request->get['filter_community'])) {
-			$params['filter_community'] = $this->request->get['filter_community'];
+		if (isset($this->request->get['filter_message'])) {
+			$params['filter_message'] = $this->request->get['filter_message'];
 		}
 
-		if (isset($this->request->get['filter_address'])) {
-			$params['filter_address'] = $this->request->get['filter_address'];
-		}
-
-		if (isset($this->request->get['filter_sex'])) {
-			$params['filter_sex'] = $this->request->get['filter_sex'];
-		}
-
-        	return $params;
-    	}
+        return $params;
+    }
 
 	private function generatePagingURLParams() {
         	$params = $this->generateURL();
@@ -143,20 +135,14 @@ class ControllerOrderOrder extends Controller {
 		$filter_id = $this->request->get('filter_id');
 		$this->data['filter_id'] = $filter_id;
 
-		$filter_alias = $this->request->get('filter_alias');
-		$this->data['filter_alias'] = $filter_alias;
+		$filter_name = $this->request->get('filter_name');
+		$this->data['filter_name'] = $filter_name;
 
-		$filter_mobile = $this->request->get('filter_mobile');
-		$this->data['filter_mobile'] = $filter_mobile;
+		$filter_state = $this->request->get('filter_state');
+		$this->data['filter_state'] = $filter_state;
 
-		$filter_community = $this->request->get('filter_community');
-		$this->data['filter_community'] = $filter_community;
-
-		$filter_address = $this->request->get('filter_address');
-		$this->data['filter_address'] = $filter_address;
-
-		$filter_sex = $this->request->get('filter_sex');
-		$this->data['filter_sex'] = $filter_sex;
+		$filter_message = $this->request->get('filter_message');
+		$this->data['filter_message'] = $filter_message;
 
 		$sort = $this->request->get('sort');
 			
@@ -190,11 +176,9 @@ class ControllerOrderOrder extends Controller {
         	// query data
 		$query_params = array(
                               'filter_id' => $filter_id,
-                              'filter_alias' => $filter_alias,
-                              'filter_mobile' => $filter_mobile,
-                              'filter_community' => $filter_community,
-                              'filter_address' => $filter_address,
-                              'filter_sex' => $filter_sex,
+                              'filter_name' => $filter_name,
+                              'filter_state' => $filter_state,
+                              'filter_message' => $filter_message,
                               'sort' => $sort,
                               'order' => $order,
                               'start' => ($page-1) * $this->config->get('config_admin_limit'),

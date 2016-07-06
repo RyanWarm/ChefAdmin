@@ -1,5 +1,5 @@
 <?php
-class ModelCustomerCustomer extends Model {
+class ModelOrderOrder extends Model {
 	public function add($data) {
 		$query = "INSERT INTO orders SET open_id='" . $data['open_id'] . "' ";
 
@@ -185,7 +185,7 @@ class ModelCustomerCustomer extends Model {
 	} 
 
 	public function getItem($id) {
-        	$query = $this->db->query("SELECT * FROM orders WHERE id = '" .$this->db->escape($id) . "'");
+        	$query = $this->db->query("SELECT * FROM orders WHERE oid = '" .$this->db->escape($id) . "'");
 
         	return $query->row;
     	}
@@ -200,33 +200,25 @@ class ModelCustomerCustomer extends Model {
 		if ($for_count) {
 		    $sql = "SELECT count(*) as total ";
 		} else {
-		    $sql = "SELECT *, traded_money/traded_num AS unit";
+		    $sql = "SELECT * ";
 		}
 
-		$sql .= " FROM orders WHERE TRUE"; 
+		$sql .= "FROM orders WHERE TRUE"; 
 
 		if (!empty($params['filter_id'])) {
 		    $sql .= " AND LCASE(id) LIKE '%" . $this->db->escape($params['filter_id']) . "%'";
 		}
 
-		if (!empty($params['filter_alias']) && $params['filter_alias'] != 'all') {
-		    $sql .= " AND LCASE(alias) LIKE '%" . $this->db->escape($params['filter_alias']) . "%'";
+		if (!empty($params['filter_name']) && $params['filter_name'] != 'all') {
+		    $sql .= " AND LCASE(name) LIKE '%" . $this->db->escape($params['filter_name']) . "%'";
 		}
 
-		if (!empty($params['filter_mobile'])) {
-		    $sql .= " AND LCASE(mobile) LIKE '%" . $this->db->escape($params['filter_mobile']) . "%'";
+		if (!empty($params['filter_state'])) {
+		    $sql .= " AND LCASE(state) LIKE '%" . $this->db->escape($params['filter_state']) . "%'";
 		}
 
-		if (!empty($params['filter_community'])) {
-		    $sql .= " AND LCASE(community) LIKE '%" . $this->db->escape($params['filter_community']) . "%'";
-		}
-
-		if (!empty($params['filter_address'])) {
-		    $sql .= " AND LCASE(address) LIKE '%" . $this->db->escape($params['filter_address']) . "%'";
-		}
-
-		if (!empty($params['filter_sex'])) {
-		    $sql .= " AND LCASE(sex) LIKE '%" . $this->db->escape($params['filter_sex']) . "%'";
+		if (!empty($params['filter_message'])) {
+		    $sql .= " AND LCASE(message) LIKE '%" . $this->db->escape($params['filter_message']) . "%'";
 		}
 
 		if (empty($params['sort']) || $for_count) {
