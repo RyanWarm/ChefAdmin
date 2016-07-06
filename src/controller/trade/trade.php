@@ -92,6 +92,10 @@ class ControllerTradeTrade extends Controller {
 			$params['filter_status'] = $this->request->get['filter_status'];
 		}
 
+		if (isset($this->request->get['sort'])) {
+			$params['sort'] = $this->request->get['sort'];
+		}
+
         	return $params;
     	}
 

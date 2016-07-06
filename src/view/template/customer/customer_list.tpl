@@ -32,13 +32,14 @@
               <td class="left">地址</td>
               <td class="left"><a href="index.php?route=customer/customer&sort=join_time">加入时间↓</a></td>
               <td class="left">性别</td>
+              <td class="left">Trades</td>
               <td class="right"><?php echo $column_action; ?></td>
             </tr>
           </thead>
           <tbody>
             <tr class="filter">
               <td></td>
-              <td><input type="text" style="width: 40px;" name="filter_id" value="<?php echo $filter_id; ?>" /></td>
+              <td><input type="text" style="width: 100px;" name="filter_id" value="<?php echo $filter_id; ?>" /></td>
               <td><input type="text" style="width: 100px;" name="filter_alias" value="<?php echo $filter_alias; ?>" /></td>
               <td><input type="text" style="width: 100px;" name="filter_mobile" value="<?php echo $filter_mobile; ?>" /></td>
               <td></td>
@@ -47,7 +48,8 @@
               <td><input type="text" style="width: 100px;" name="filter_community" value="<?php echo $filter_community; ?>" /></td>
               <td><input type="text" style="width: 100px;" name="filter_address" value="<?php echo $filter_address; ?>" /></td>
               <td></td>
-              <td><input type="text" style="width: 140px;" name="filter_sex" value="<?php echo $filter_sex; ?>" /></td>
+              <td><input type="text" style="width: 20px;" name="filter_sex" value="<?php echo $filter_sex; ?>" /></td>
+              <td></td>
               <td align="right"><a onclick="filter();" class="button">筛选</a></td>
             </tr>
             <?php if ($list) { ?>
@@ -58,7 +60,7 @@
                 <?php } else { ?>
                 <input type="checkbox" name="selected[]" value="<?php echo $item['id']; ?>" />
                 <?php } ?></td>
-              <td class="left"><?php echo $item['id']; ?></td>
+              <td class="left"><?php echo $item['youzan_id']; ?></td>
               <td class="left"><?php echo $item['alias']; ?></td>
               <td class="left"><?php echo $item['mobile']; ?></td>
               <td class="left"><?php echo $item['traded_num']; ?></td>
@@ -68,6 +70,7 @@
               <td class="left"><?php echo $item['address']; ?></td>
               <td class="left"><?php echo $item['join_time']; ?></td>
               <td class="left"><?php echo $item['sex']; ?></td>
+              <td class="left"><a target="_blank" href="index.php?route=trade/trade&filter_youzan_id=<?php echo $item['youzan_id']; ?>">All Trades</a></td>
               <td class="right"><?php foreach ($item['action'] as $action) { ?>
                 [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
                 <?php } ?></td>

@@ -185,7 +185,7 @@ class ModelCustomerCustomer extends Model {
 	} 
 
 	public function getItem($id) {
-        	$query = $this->db->query("SELECT * FROM users WHERE id = '" .$this->db->escape($id) . "'");
+        	$query = $this->db->query("SELECT * FROM users WHERE youzan_id = '" .$this->db->escape($id) . "'");
 
         	return $query->row;
     	}
@@ -206,7 +206,7 @@ class ModelCustomerCustomer extends Model {
 		$sql .= " FROM users WHERE TRUE"; 
 
 		if (!empty($params['filter_id'])) {
-		    $sql .= " AND LCASE(id) LIKE '%" . $this->db->escape($params['filter_id']) . "%'";
+		    $sql .= " AND LCASE(youzan_id) LIKE '%" . $this->db->escape($params['filter_id']) . "%'";
 		}
 
 		if (!empty($params['filter_alias']) && $params['filter_alias'] != 'all') {

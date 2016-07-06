@@ -24,13 +24,13 @@
               <td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
               <td class="left">ID</td>
               <td class="left">用户ID</td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=order_num">菜品数量↓</a></td>
+              <td class="left"><a href="index.php?route=trade/trade&sort=order_num">菜品数量↓</a></td>
               <td class="left">支付类型</td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=post_fee">送餐费用↓</a></td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=payment">支付金额↓</a></td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=discount">折扣↓</a></td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=total_fee">总价↓</a></td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=consign_time">交易时间↓</a></td>
+              <td class="left"><a href="index.php?route=trade/trade&sort=post_fee">送餐费用↓</a></td>
+              <td class="left"><a href="index.php?route=trade/trade&sort=payment">支付金额↓</a></td>
+              <td class="left"><a href="index.php?route=trade/trade&sort=discount">折扣↓</a></td>
+              <td class="left"><a href="index.php?route=trade/trade&sort=total_fee">总价↓</a></td>
+              <td class="left"><a href="index.php?route=trade/trade&sort=consign_time">交易时间↓</a></td>
               <td class="left">留言</td>
               <td class="left">订单状态</td>
               <td class="right"><?php echo $column_action; ?></td>
@@ -61,7 +61,7 @@
                 <input type="checkbox" name="selected[]" value="<?php echo $item['id']; ?>" />
                 <?php } ?></td>
               <td class="left"><?php echo $item['id']; ?></td>
-              <td class="left"><?php echo $item['youzan_id']; ?></td>
+              <td class="left"><a target="_blank" href="index.php?route=customer/customer&filter_id=<?php echo $item['youzan_id']; ?>"><?php echo $item['youzan_id']; ?></a></td>
               <td class="left"><?php echo $item['order_num']; ?></td>
               <td class="left"><?php echo $item['pay_type']; ?></td>
               <td class="left"><?php echo $item['post_fee']; ?></td>        
@@ -96,7 +96,7 @@ $('#form input').keydown(function(e) {
 });
 
 function filter() {
-	url = 'index.php?route=customer/customer';
+	url = 'index.php?route=trade/trade';
 	
 	var filter_id = $('input[name=\'filter_id\']').attr('value');
 	if (filter_id) {
