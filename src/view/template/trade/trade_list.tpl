@@ -62,7 +62,7 @@
                 <?php } ?></td>
               <td class="left"><?php echo $item['id']; ?></td>
               <td class="left"><a target="_blank" href="index.php?route=customer/customer&filter_id=<?php echo $item['youzan_id']; ?>"><?php echo $item['youzan_id']; ?></a></td>
-              <td class="left"><?php echo $item['order_num']; ?></td>
+              <td class="left"><a target="_blank" href="index.php?route=order/order&filter_tid=<?php echo $item['tid']; ?>"><?php echo $item['order_num']; ?></a></td>
               <td class="left"><?php echo $item['pay_type']; ?></td>
               <td class="left"><?php echo $item['post_fee']; ?></td>        
               <td class="left"><?php echo $item['payment']; ?></td>

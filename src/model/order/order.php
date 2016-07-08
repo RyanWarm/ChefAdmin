@@ -206,7 +206,11 @@ class ModelOrderOrder extends Model {
 		$sql .= "FROM orders WHERE TRUE"; 
 
 		if (!empty($params['filter_id'])) {
-		    $sql .= " AND LCASE(id) LIKE '%" . $this->db->escape($params['filter_id']) . "%'";
+		    $sql .= " AND LCASE(oid) LIKE '%" . $this->db->escape($params['filter_id']) . "%'";
+		}
+
+		if (!empty($params['filter_tid'])) {
+		    $sql .= " AND LCASE(tid) LIKE '%" . $this->db->escape($params['filter_tid']) . "%'";
 		}
 
 		if (!empty($params['filter_name']) && $params['filter_name'] != 'all') {
@@ -247,9 +251,9 @@ class ModelOrderOrder extends Model {
 
 	public function getList($params = array()) {
 
-        $sql = $this->createQueryString($params, FALSE);
+		$sql = $this->createQueryString($params, FALSE);
 
-        $query = $this->db->query($sql);
+		$query = $this->db->query($sql);
 
 		return $query->rows;
 	}

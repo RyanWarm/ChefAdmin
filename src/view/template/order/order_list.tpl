@@ -24,13 +24,14 @@
               <td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
               <td class="left">id</td>
               <td class="left">菜品名称</td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=price">单价↓</a></td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=num">数量↓</a></td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=payment">合计↓</a></td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=discount">折扣↓</a></td>
-              <td class="left"><a href="index.php?route=customer/customer&sort=total">总价↓</a></td>
+              <td class="left"><a href="index.php?route=order/order&sort=price">单价↓</a></td>
+              <td class="left"><a href="index.php?route=order/order&sort=num">数量↓</a></td>
+              <td class="left"><a href="index.php?route=order/order&sort=payment">付款↓</a></td>
+              <td class="left"><a href="index.php?route=order/order&sort=discount">折扣↓</a></td>
+              <td class="left"><a href="index.php?route=order/order&sort=total">总价↓</a></td>
               <td class="left">状态</td>
               <td class="left">用户留言</td>
+              <td class="left">用户信息</td>
               <td class="right"><?php echo $column_action; ?></td>
             </tr>
           </thead>
@@ -46,6 +47,7 @@
               <td></td>
               <td><input type="text" style="width: 100px;" name="filter_state" value="<?php echo $filter_state; ?>" /></td>
               <td><input type="text" style="width: 100px;" name="filter_message" value="<?php echo $filter_message; ?>" /></td>
+              <td></td>
               <td align="right"><a onclick="filter();" class="button">筛选</a></td>
             </tr>
             <?php if ($list) { ?>
@@ -65,6 +67,7 @@
               <td class="left"><?php echo $item['total']; ?></td>
               <td class="left"><?php echo $item['state']; ?></td>
               <td class="left"><?php echo $item['message']; ?></td>
+              <td class="left"><a target="_blank" href="index.php?route=customer/customer&filter_id=<?=$item['youzan_id']?>">查看</a></td>
               <td class="right"><?php foreach ($item['action'] as $action) { ?>
                 [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
                 <?php } ?></td>
@@ -90,7 +93,7 @@ $('#form input').keydown(function(e) {
 });
 
 function filter() {
-	url = 'index.php?route=customer/customer';
+	url = 'index.php?route=order/order';
 	
 	var filter_id = $('input[name=\'filter_id\']').attr('value');
 	if (filter_id) {

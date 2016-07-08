@@ -76,6 +76,10 @@ class ControllerOrderOrder extends Controller {
 			$params['filter_id'] = $this->request->get['filter_id'];
 		}
 
+		if (isset($this->request->get['filter_tid'])) {
+			$params['filter_tid'] = $this->request->get['filter_tid'];
+		}
+
 		if (isset($this->request->get['filter_name'])) {
 			$params['filter_name'] = $this->request->get['filter_name'];
 		}
@@ -135,6 +139,9 @@ class ControllerOrderOrder extends Controller {
 		$filter_id = $this->request->get('filter_id');
 		$this->data['filter_id'] = $filter_id;
 
+		$filter_tid = $this->request->get('filter_tid');
+		$this->data['filter_tid'] = $filter_tid;
+
 		$filter_name = $this->request->get('filter_name');
 		$this->data['filter_name'] = $filter_name;
 
@@ -176,6 +183,7 @@ class ControllerOrderOrder extends Controller {
         	// query data
 		$query_params = array(
                               'filter_id' => $filter_id,
+                              'filter_tid' => $filter_tid,
                               'filter_name' => $filter_name,
                               'filter_state' => $filter_state,
                               'filter_message' => $filter_message,
