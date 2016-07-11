@@ -4,8 +4,6 @@
 import MySQLdb
 from flask import Flask,g,request,make_response,render_template,redirect
 import hashlib
-from WXBizMsgCrypt import WXBizMsgCrypt
-from WXBizMsgCrypt_Service import WXBizMsgCrypt_Service
 import urllib
 from urllib import unquote
 import time
@@ -75,13 +73,14 @@ def construct_url(params):
 
 ############### For Data Transfering ################
 
-def get_fans_helper():
+def get_fans_helper(cur):
     print "==========Fans info helper Request received=========="
 
     current_time = datetime.now()
 
     params = {}
     result = {}
+    
     result['total_results'] = 0
     result['users'] = []
 
@@ -121,8 +120,12 @@ def get_fans_helper():
     fo = open('users_' + current_time.strftime("%Y%m%d") + '.json', 'w')
     fo.write(json.dumps(result))
     fo.close()
+    """
+    fi = open('users_' + current_time.strftime("%Y%m%d") + '.json', 'r')
+    result = json.loads(fi.readline())
+    """
 
-    users_injection(result)
+    users_injection(result, cur)
 
     return result
 
@@ -130,53 +133,52 @@ def daterange(start_date, end_date):
     for n in range(int ((end_date - start_date).days)):
         yield start_date + timedelta(n)
 
-def users_injection(users):
-    try:
-        for user in users['users']:
-            if 'follow_time' not in user_info or user_info['follow_time'] is None:
-                TIMEFORMAT = '%Y-%m-%d'
-                join_time = time.strftime(TIMEFORMAT, time.localtime(time.time()))
-            else:
-                join_time = user_info['follow_time'][:10]
+def users_injection(users, cur):
+    add_users = 0
+    update_users = 0
+    for user_info in users['users']:
+        if 'follow_time' not in user_info or user_info['follow_time'] is None:
+            TIMEFORMAT = '%Y-%m-%d'
+            join_time = time.strftime(TIMEFORMAT, time.localtime(time.time()))
+        else:
+            join_time = user_info['follow_time'][:10]
 
-            open_id = user_info['weixin_openid']
-            youzan_id = user['user_id']
-            alias = user_info['nick'].encode("utf-8")
-            sex = user_info['sex']
-            traded_num = user_info['traded_num']
-            traded_money = user_info['traded_money']
-            points = user_info['points']
-            avatar = user_info['avatar']
+        open_id = user_info['weixin_openid']
+        youzan_id = user_info['user_id']
+        alias = user_info['nick']#.encode("utf-8")
+        sex = user_info['sex']
+        traded_num = user_info['traded_num']
+        traded_money = user_info['traded_money']
+        points = user_info['points']
+        avatar = user_info['avatar']
 
-            sql = "SELECT COUNT(*) FROM `users` WHERE `open_id`='%s'" % open_id
-            result = cur.execute(sql).fetchone()
-            nor = result[0]
+        sql = "SELECT COUNT(*) FROM `users` WHERE `open_id`='%s'" % open_id
+        cur.execute(sql)
+        nor = cur.fetchone()
 
-            add_users = 0
-            update_users = 0
-            if 0 < nor: #user information exists
-                sql = "UPDATE users SET traded_num = " + str(traded_num)
-                sql += ", traded_money = " + str(traded_money)
-                sql += ", points = " + str(points)
-                sql += "WHERE open_id = '" + open_id + "'"
-                update_users += 1
-            else:
-                sql = "INSERT INTO `users` (`open_id`, `youzan_id`, `alias`, `join_time`, `sex`, `traded_num`, `traded_money`, `points`, `avatar`) VALUES ('"
-                sql += open_id + "', '"
-                sql += youzan_id + "', '"
-                sql += alias + "', '"
-                sql += join_time + "', '"
-                sql += sex + "', "
-                sql += str(traded_num) + ", "
-                sql += str(traded_money) + ", "
-                sql += str(points) + ", '"
-                sql += avatar + "');"
-                add_users += 1
+        if 0 < nor[0]: #user information exists
+            sql = "UPDATE users SET traded_num = " + str(traded_num)
+            sql += ", traded_money = " + str(traded_money)
+            sql += ", points = " + str(points)
+            sql += " WHERE open_id = '" + open_id + "'"
+            update_users += 1
+        else:
+            sql = "INSERT INTO `users` (`open_id`, `youzan_id`, `alias`, `join_time`, `sex`, `traded_num`, `traded_money`, `points`, `avatar`) VALUES ('"
+            sql += open_id + "', '"
+            sql += youzan_id + "', '"
+            sql += alias + "', '"
+            sql += join_time + "', '"
+            sql += sex + "', "
+            sql += str(traded_num) + ", "
+            sql += str(traded_money) + ", "
+            sql += str(points) + ", '"
+            sql += avatar + "');"
+            add_users += 1
 
-            print sql
-            cur.execute(sql)
-    except Exception,ex:
-        print Exception,":",ex
+        print sql
+        cur.execute(sql)
+    print "add %s new users" % add_users
+    print "update %s new users" % update_users
 
 def get_all_trades_info():
     print "==========All Trades info Request received=========="
@@ -244,6 +246,6 @@ if __name__ == "__main__":
     cur.execute('SET character_set_connection=utf8;')
 
     #get_all_trades_info()
-    get_fans_helper()
+    get_fans_helper(cur)
 
     db.close()
