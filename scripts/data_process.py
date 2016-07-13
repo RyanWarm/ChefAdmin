@@ -226,13 +226,6 @@ def get_all_trades_info():
     
     return msg
 
-def user_update():
-    """
-    new = session.query(News).filter(News.tid==0).first()
-    new.tid = 100
-    session.commit()
-    """
-    
 if __name__ == "__main__":
     db = MySQLdb.connect(host="localhost",    # your host, usually localhost
                      user="root",         # your username
