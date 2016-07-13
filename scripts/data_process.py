@@ -73,7 +73,7 @@ def construct_url(params):
 
 ############### For Data Transfering ################
 
-def get_fans_helper(cur):
+def get_fans_helper():
     print "==========Fans info helper Request received=========="
 
     current_time = datetime.now()
@@ -125,7 +125,7 @@ def get_fans_helper(cur):
     result = json.loads(fi.readline())
     """
 
-    users_injection(result, cur)
+    users_injection(result)
 
     return result
 
@@ -133,7 +133,7 @@ def daterange(start_date, end_date):
     for n in range(int ((end_date - start_date).days)):
         yield start_date + timedelta(n)
 
-def users_injection(users, cur):
+def users_injection(users):
     add_users = 0
     update_users = 0
     for user_info in users['users']:
@@ -223,8 +223,114 @@ def get_all_trades_info():
     fo = open('order.txt', 'w')
     fo.write(json.dumps(result))
     fo.close()
+
+    trades_injection(result)
     
     return msg
+
+def trades_injection(trades):
+    print len(trades['response']['trades'])
+
+    add_trades = 0
+    modify_trades = 0
+    for trade in trades['response']['trades']:
+        consign_time = trade['consign_time']
+        youzan_id = trade['weixin_user_id']
+        order_num = trade['num']
+        address = trade['receiver_address']
+        pay_type = trade['pay_type']
+        district = trade['receiver_district']
+        message = trade['buyer_message']
+        post_fee = trade['post_fee']
+        tid = trade['tid']
+        status = trade['status']
+        mobile = trade['receiver_mobile']
+        payment = trade['payment']
+        discount_fee = trade['discount_fee']
+        adjust_fee = trade['adjust_fee']
+        total_fee = trade['total_fee']
+        receiver_name = trade['receiver_name']
+        
+        sql = "UPDATE users SET mobile = '" + mobile + "'"
+        if len(receiver_name) > 0:
+            sql += ", name = '" + receiver_name + "'"
+        if len(address) > 0:
+            sql += ", address = '" + address + "'"
+        
+        sql +=  " WHERE youzan_id = '" + youzan_id + "'"
+        print sql
+        cur.execute(sql)
+
+        sql = "SELECT COUNT(*) FROM `users` WHERE `open_id`='%s'" % open_id
+        cur.execute(sql)
+        nor = cur.fetchone()
+
+        if 0 >= nor[0]: #trade information not exists
+            add_trades += 1
+            
+            sql = "INSERT INTO `trades` (`tid`, `youzan_id`, `order_num`, `pay_type`, `district`, `post_fee`, `payment`, `discount`, `total_fee`, `message`, `status`, `consign_time`) VALUES ('"
+            sql +=  tid + "', '"
+            sql += youzan_id + "', "
+            sql += str(order_num) + ", '"
+            sql += pay_type + "', '"
+            sql += district + "', "
+            sql += str(post_fee) + ", "
+            sql += str(payment) + ", "
+            sql += str(discount_fee) + ", "
+            #sql += str(adjust_fee) + ", "
+            sql += str(total_fee) + ", '"
+            sql += message + "', '"
+            sql += status + "', '"
+            sql += consign_time + "');"
+            #print sql
+
+            cur.execute(sql)
+            
+            
+            for order in trade['orders']:
+                name = order['title']
+                cut = len(name)
+                splash = name.find('/')
+                if splash >= 0 and splash < cut:
+                    cut = splash
+                cnbrack = name.find("（".decode('utf-8'))
+                if cnbrack >= 0 and cnbrack < cut:
+                    cut = cnbrack
+                enbrack = name.find('(')
+                if enbrack >= 0 and enbrack < cut:
+                    cut = enbrack
+                name = name[:cut]
+
+                msgs = order['buyer_messages']
+                message = "|"
+                for msg in msgs:
+                    if "" != msg['content']:
+                        message += msg['content'] + '|'
+
+                sql = "INSERT INTO `orders` (`oid`, `tid`, `youzan_id`, `name`, `message`, `price`, `num`, `payment`, `discount`, `total`, `state`) VALUES ('"
+                sql +=  str(order['oid']) + "', '"
+                sql += tid + "', '"
+                sql += youzan_id + "', '"
+                sql += name + "', '"
+                sql += message + "', "
+                sql += str(order['price']) + ", "
+                sql += str(order['num']) + ", "
+                sql += str(order['payment']) + ", "
+                sql += str(order['discount_fee']) + ", "
+                sql += str(order['total_fee']) + ", '"
+                sql += order['state_str'] + "');"
+
+                print sql
+                cur.execute(sql)
+        else:
+            modify_trades += 1
+            sql = "UPDATE trades SET pay_type = '" + str(pay_type)
+            sql += "', payment = " + str(payment)
+            sql += ", status = '" + str(status)
+            sql += "' WHERE tid = '" + tid + "'"
+
+    print "add %s new trades" % add_trades
+    print "update %s new trades" % modify_trades
 
 if __name__ == "__main__":
     db = MySQLdb.connect(host="localhost",    # your host, usually localhost
