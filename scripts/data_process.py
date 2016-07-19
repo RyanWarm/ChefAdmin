@@ -90,7 +90,6 @@ def get_fans_helper():
     end_date = current_time
     for single_date in daterange(start_date, end_date):
         end = single_date
-        print end
         start = single_date - timedelta(1)
 
         # application params
@@ -236,6 +235,7 @@ def get_all_trades_info():
     fo.close()
 
     trades_injection(result)
+    process_deliver_time(result)
     
     return msg
 
@@ -357,6 +357,116 @@ def trades_injection(trades):
     print "add %s new trades" % add_trades
     print "update %s existing trades" % modify_trades
 
+def process_deliver_time(trades):
+    """
+    fi = open('order_20160719.json','r')
+    vals = json.loads(fi.readline())
+    """
+    print "===============Start to process deliver time================"
+    res = trades['response']['trades']
+    print len(res)
+
+    current_time = datetime.now()
+    baseline_time = current_time - timedelta(7)
+    baseline_time = baseline_time.strftime("%Y-%m-%d %H:%M:%S") 
+
+    num = 0
+    break_list = ['时', '.', '点', ':', '：']
+    #res = [{'buyer_message':'做好随时可以送，12点前。谢谢'.decode('utf-8'), 'pay_time': '2016-07-18 11:11:28', 'title':'周一午餐'.decode('utf-8')}]
+    for trade in res:
+        if trade['pay_time'] < baseline_time:
+            continue
+        message = trade['buyer_message']
+        valid = True
+        bk = '$'
+        for breaker in break_list:
+            breaker = breaker.decode('utf-8')
+            if message.count(breaker) > 1:
+                valid = False
+                break
+
+            if message.count(breaker) == 1:
+                bk = breaker
+
+        if not valid or '$' == bk:
+            continue
+        """
+        if (':' not in trade['buyer_message'] and '：'.decode('utf-8') not in trade['buyer_message']) or trade['buyer_message'].count(':') > 1 or trade['buyer_message'].count('：'.decode('utf-8')) > 1:
+            continue
+        """
+        if '' == trade['pay_time']:
+            continue
+        #print trade['title']
+        #print message
+
+        num += 1
+        pay_time = datetime.strptime(trade['pay_time'], "%Y-%m-%d %H:%M:%S")
+        vals = message.split(bk)
+        half = False
+        if vals[1].startswith('半'.decode('utf-8')):
+            half = True
+        vals[0] = vals[0][-2:]
+        vals[1] = vals[1][:2]
+        left = filter(lambda ch: ch in '0123456789', vals[0])
+        right = filter(lambda ch: ch in '0123456789', vals[1])
+        #dTime = left + ':' + right
+        #print dTime
+
+        weekday = -1
+        dish = -1
+        for key in weekdays:
+            if key.decode('utf-8') in trade['title']:
+                weekday = weekdays[key]
+                break
+        for key in dishes:
+            if key.decode('utf-8') in trade['title']:
+                dish = dishes[key]
+                break
+
+        if '' == left:
+            continue
+        if int(left) > 23:
+            left = int(left) % 10
+        if '' == right:
+            if half:
+                right = 30
+            else:
+                right = 0
+
+        dTime = datetime(pay_time.year, pay_time.month, pay_time.day, int(left), int(right), 0)
+        #now = datetime.now()
+        weekday_now = dTime.weekday()
+
+        if False:
+            print weekday_now
+            print pay_time
+            print weekday
+            print dish
+
+        if -1 != weekday:
+            day_diff = weekday - weekday_now
+            if 0 > day_diff:
+                day_diff += 7
+            #print "diff" + str(day_diff)
+            dTime = dTime + timedelta(day_diff)
+
+        new_left = left
+        if -1 != dish:
+            if 1 == dish and int(left) < 6:
+                new_left = int(left) + 12
+            if 2 == dish and int(left) < 13:
+                new_left = int(left) + 12
+            if new_left > 23:
+                new_left = left
+
+            #print left
+        dTime = datetime(dTime.year, dTime.month, dTime.day, int(new_left), int(right), 0)
+        #print dTime
+
+        sql = "UPDATE trades SET deliver_time = '" + dTime.strftime("%Y-%m-%d %H:%M:%S") + "' WHERE tid = '" + trade['tid'] + "';"
+        #print sql
+        cur.execute(sql)
+
 if __name__ == "__main__":
     db = MySQLdb.connect(host="localhost",    # your host, usually localhost
                      user="root",         # your username
@@ -372,6 +482,9 @@ if __name__ == "__main__":
     current_time = datetime.now()
     hour = current_time.hour
     minute = current_time.minute
+
+    weekdays = {'周日':6, '周一':0, '周二':1, '周三':2, '周四':3, '周五':4, '周六':5}
+    dishes = {'早餐':0, '午餐':1, '晚餐':2}
 
     if hour > 4 and hour < 22:
         # update trade info every 5 minutes during 5:00am to 10:00pm

@@ -31,6 +31,7 @@
               <td class="left"><a href="index.php?route=trade/trade&sort=discount">折扣↓</a></td>
               <td class="left"><a href="index.php?route=trade/trade&sort=total_fee">总价↓</a></td>
               <td class="left"><a href="index.php?route=trade/trade&sort=consign_time">交易时间↓</a></td>
+              <td class="left"><a href="index.php?route=trade/trade&sort=deliver_time">送餐时间↓</a></td>
               <td class="left">留言</td>
               <td class="left">订单状态</td>
               <td class="right"><?php echo $column_action; ?></td>
@@ -43,6 +44,7 @@
               <td><input type="text" style="width: 100px;" name="filter_youzan_id" value="<?php echo $filter_youzan_id; ?>" /></td>
               <td></td>
               <td><input type="text" style="width: 100px;" name="filter_pay_type" value="<?php echo $filter_pay_type; ?>" /></td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -69,6 +71,7 @@
               <td class="left"><?php echo $item['discount']; ?></td>
               <td class="left"><?php echo $item['total_fee']; ?></td>
               <td class="left"><?php echo $item['consign_time']; ?></td>
+              <td class="left"><?php echo $item['deliver_time']; ?></td>
               <td class="left"><?php echo $item['message']; ?></td>
               <td class="left"><?php echo $item['status']; ?></td>
               <td class="right"><?php foreach ($item['action'] as $action) { ?>
