@@ -402,13 +402,50 @@ def process_deliver_time(trades):
         num += 1
         pay_time = datetime.strptime(trade['pay_time'], "%Y-%m-%d %H:%M:%S")
         vals = message.split(bk)
+        """
         half = False
         if vals[1].startswith('半'.decode('utf-8')):
             half = True
+        """
+        left = -1
+        right = -1
+
+        # Left process for chinese string
+        for ht in hours_three:
+            if vals[0].endswith(ht.decode('utf-8')):
+                left = hours_three[ht]
+                break
+        if -1 == left:
+            for htwo in hours_two:
+                if vals[0].endswith(htwo.decode('utf-8')):
+                    left = hours_two[htwo]
+                    break
+        if -1 == left:
+            for hone in hours_one:
+                if vals[0].endswith(hone.decode('utf-8')):
+                    left = hours_one[hone]
+                    break
+
+        # Right process for chinese string
+        for mt in minutes_three:
+            if vals[1].startswith(mt.decode('utf-8')):
+                right = minutes_three[mt]
+                break
+        if -1 == right:
+            for mtwo in minutes_two:
+                if vals[1].startswith(mtwo.decode('utf-8')):
+                    right = minutes_two[mtwo]
+                    break
+        if -1 == right:
+            for mone in minutes_one:
+                if vals[1].startswith(mone.decode('utf-8')):
+                    right = minutes_one[mone]
+                    break
+
         vals[0] = vals[0][-2:]
         vals[1] = vals[1][:2]
-        left = filter(lambda ch: ch in '0123456789', vals[0])
-        right = filter(lambda ch: ch in '0123456789', vals[1])
+        left_str = filter(lambda ch: ch in '0123456789', vals[0])
+        right_str = filter(lambda ch: ch in '0123456789', vals[1])
         #dTime = left + ':' + right
         #print dTime
 
@@ -423,15 +460,22 @@ def process_deliver_time(trades):
                 dish = dishes[key]
                 break
 
-        if '' == left:
+        if -1 == left and '' == left_str:
             continue
-        if int(left) > 23:
-            left = int(left) % 10
-        if '' == right:
-            if half:
-                right = 30
+
+        if -1 == left:
+            if int(left_str) > 23:
+                left = int(left_str) % 10
             else:
+                left = int(left_str)
+
+        if -1 == right: 
+            if '' == right_str:
                 right = 0
+            elif int(right_str) > 59:
+                right = int(right_str) % 60
+            else:
+                right = int(right_str)
 
         dTime = datetime(pay_time.year, pay_time.month, pay_time.day, int(left), int(right), 0)
         #now = datetime.now()
@@ -485,6 +529,17 @@ if __name__ == "__main__":
 
     weekdays = {'周日':6, '周一':0, '周二':1, '周三':2, '周四':3, '周五':4, '周六':5}
     dishes = {'早餐':0, '午餐':1, '晚餐':2}
+    hours_three = {'二十一':21, '二十二':22, '二十三':23}
+    hours_two = {'十一':11, '十二':12, '十三':13, '十四':14, '十五':15, '十六':16, '十七':17, '十八':18, '十九':19, '二十':20}
+    hours_one = {'一':1, '二':2, '三':3, '四':4, '五':5, '六':6, '七':7, '八':8, '九':9, '十':10, '两':2}
+    minutes_three = {'二十一':21, '二十二':22, '二十三':23, '二十四':24, '二十五':25, '二十六':26, '二十七':27, '二十八':28, '二十九':29}
+    minutes_three.update({'三十一':31, '三十二':32, '三十三':33, '三十四':34, '三十五':35, '三十六':36, '三十七':37, '三十八':38, '三十九':39})
+    minutes_three.update({'四十一':41, '四十二':42, '四十三':43, '四十四':44, '四十五':45, '四十六':46, '四十七':47, '四十八':48, '四十九':49})
+    minutes_three.update({'五十一':51, '五十二':52, '五十三':53, '五十四':54, '五十五':55, '五十六':56, '五十七':57, '五十八':58, '五十九':59})
+    minutes_two = {'零一':1, '零二':2, '零三':3, '零四':4, '零五':5, '零六':6, '零七':7, '零八':8, '零九':9, '十分':10, '一刻':15}
+    minutes_two.update({'十一':11, '十二':12, '十三':13, '十四':14, '十五':15, '十六':16, '十七':17, '十八':18, '十九':19})
+    minutes_two.update({'二十':20, '三十':30, '四十':40, '五十':50})
+    minutes_one = {'半':30}
 
     if hour > 4 and hour < 22:
         # update trade info every 5 minutes during 5:00am to 10:00pm
