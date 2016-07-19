@@ -25,69 +25,48 @@
             <td><?= !empty($id)? $id: ''; ?></td>
           </tr>
           <tr>
-            <td>公司名称</td>
-            <td><input type="text" name="name" size="50" value="<?php echo $name; ?>" />
+            <td>用户ID</td>
+            <td><?= !empty($youzan_id)? $youzan_id: ''; ?></td>
           </tr>
           <tr>
-            <td>公司名称(Normalized)</td>
-            <td><input type="test" name="normalized_name" size="50" value="<?php echo $normalized_name; ?>" /></td>
+            <td>菜品数量</td>
+            <td><?= !empty($order_num)? $order_num: ''; ?></td>
           </tr>
           <tr>
-            <td>雇员数量</td>
-            <td><input type="text" name="employer_count" size="50" value="<?php echo $employer_count; ?>" />
+            <td>支付类型</td>
+            <td><?= !empty($pay_type)? $pay_type: ''; ?></td>
           </tr>
           <tr>
-            <td>URL</td>
-            <td><input type="text" name="url" size="50" value="<?= $url; ?>" />
+            <td>送餐费用</td>
+            <td><?= !empty($post_fee)? $post_fee: ''; ?></td>
           </tr>
           <tr>
-            <td>Email</td>
-            <td><input type="text" name="email" size="50" value="<?= $email; ?>" />
+            <td>支付金额</td>
+            <td><?= !empty($payment)? $payment: ''; ?></td>
           </tr>
           <tr>
-            <td>所在地区</td>
-            <td><input type="text" name="location" size="50" value="<?= $location; ?>" />
+            <td>折扣</td>
+            <td><?= !empty($discount)? $discount: ''; ?></td>
           </tr>
           <tr>
-            <td>领域</td>
-            <td><input type="text" name="category" size="50" value="<?= $category; ?>" />
+            <td>总价</td>
+            <td><?= !empty($total_fee)? $total_fee: ''; ?></td>
           </tr>
           <tr>
-            <td>所属类别</td>
-            <td><input type="text" name="property" size="50" value="<?= $property; ?>" />
+            <td>交易时间</td>
+            <td><?= !empty($consign_time)? $consign_time: ''; ?></td>
           </tr>
           <tr>
-            <td>公司规模</td>
-	    <td>
-		<select name="scale">
-		    <?php $matched=0; ?>
-		    <option value=<?php $tmp="1-49人"; echo $tmp; ?> <?php if($scale==$tmp){ $matched=1; ?> selected<?php }?>><?php echo $tmp; ?></option>
-		    <option value=<?php $tmp="50-99人"; echo $tmp; ?> <?php if($scale==$tmp){ $matched=1; ?> selected<?php }?>><?php echo $tmp; ?></option>
-		    <option value=<?php $tmp="100-499人"; echo $tmp; ?> <?php if($scale==$tmp){ $matched=1; ?> selected<?php }?>><?php echo $tmp; ?></option>
-		    <option value=<?php $tmp="500-999人"; echo $tmp; ?> <?php if($scale==$tmp){ $matched=1; ?> selected<?php }?>><?php echo $tmp; ?></option>
-		    <option value=<?php $tmp="1000-9999人"; echo $tmp; ?> <?php if($scale==$tmp){ $matched=1; ?> selected<?php }?>><?php echo $tmp; ?></option>
-		    <option value=<?php $tmp="10000人以上"; echo $tmp; ?> <?php if($scale==$tmp){ $matched=1; ?> selected<?php }?>><?php echo $tmp; ?></option>
-		    <option value=<?php $tmp="未填写"; echo $tmp; ?> <?php if($matched==0 || $scale==$tmp){ ?> selected<?php }?>><?php echo $tmp; ?></option>
-                </select>
-	    </td>
+            <td>订单状态</td>
+            <td><?= !empty($status)? $status: ''; ?></td>
           </tr>
           <tr>
-            <td>所在城市</td>
-            <td><input type="text" name="cities" size="50" value="<?= $cities; ?>" />
+            <td>送餐时间</td>
+            <td><input type="text" name="deliver_time" size="50" value="<?= $deliver_time; ?>" /></td>
           </tr>
           <tr>
-            <td>公司简介</td>
-            <td><textarea rows="10" cols="100" name="overview"><?= $overview; ?></textarea>
-          </tr>
-          <tr>
-            <td>公司简介(Abstract)</td>
-            <td><textarea rows="10" cols="100" name="overview_abstract"><?= $overview_abstract; ?></textarea>
-          </tr>
-	  <tr>
-            <td>Company Logo</td>
-            <td><div class="image"><img src="<?php echo HTTP_IMAGE . $image; ?>" alt="" id="thumb" /><br />
-              <input type="hidden" name="image" value="<?php echo $image; ?>" id="image" />
-              <a onclick="image_upload('image', 'thumb');">Browse</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb').attr('src', '<?php echo LOCAL_IMAGE. 'recruit/' . $no_image; ?>'); $('#image').attr('value', '');">Clear</a></div></td>
+            <td>用户留言</td>
+            <td><textarea rows="5" cols="100" name="message"><?= $message; ?></textarea>
           </tr>
         </table>
       </form>

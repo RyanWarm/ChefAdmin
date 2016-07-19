@@ -326,18 +326,17 @@ class ControllerTradeTrade extends Controller {
         	}
 
         	$this->data['id'] = $this->getWithDefault($item_info, 'id', null);
-        	$this->data['name'] = $this->getWithDefault($item_info, 'name', '');        
-        	$this->data['normalized_name'] = $this->getWithDefault($item_info, 'normalized_name', '');        
-       		$this->data['overview'] = $this->getWithDefault($item_info, 'overview', '');
-       		$this->data['overview_abstract'] = $this->getWithDefault($item_info, 'overview_abstract', '');
-       		$this->data['employer_count'] = $this->getWithDefault($item_info, 'employer_count', '');
-        	$this->data['url'] = $this->getWithDefault($item_info, 'url', '');
-        	$this->data['email'] = $this->getWithDefault($item_info, 'email', '');
-        	$this->data['location'] = $this->getWithDefault($item_info, 'location', '');
-       		$this->data['category'] = $this->getWithDefault($item_info, 'category', '');
-       		$this->data['property'] = $this->getWithDefault($item_info, 'property', '');
-       		$this->data['scale'] = $this->getWithDefault($item_info, 'scale', '');
-       		$this->data['cities'] = $this->getWithDefault($item_info, 'cities', '');
+        	$this->data['youzan_id'] = $this->getWithDefault($item_info, 'name', '');        
+        	$this->data['order_num'] = $this->getWithDefault($item_info, 'normalized_name', '');        
+       		$this->data['pay_type'] = $this->getWithDefault($item_info, 'overview', '');
+       		$this->data['post_fee'] = $this->getWithDefault($item_info, 'overview_abstract', '');
+       		$this->data['payment'] = $this->getWithDefault($item_info, 'employer_count', '');
+        	$this->data['discount'] = $this->getWithDefault($item_info, 'url', '');
+        	$this->data['total_fee'] = $this->getWithDefault($item_info, 'email', '');
+        	$this->data['message'] = $this->getWithDefault($item_info, 'location', '');
+       		$this->data['status'] = $this->getWithDefault($item_info, 'category', '');
+       		$this->data['consign_time'] = $this->getWithDefault($item_info, 'property', '');
+       		$this->data['deliver_time'] = $this->getWithDefault($item_info, 'scale', '');
 
 		$this->data['no_image'] = 'no_image.jpg';
         	$image_url = $this->getWithDefault($item_info, 'image', '');

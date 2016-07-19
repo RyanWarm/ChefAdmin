@@ -119,34 +119,13 @@ class ModelTradeTrade extends Model {
 			$this->db->query($updateStr);
 		}
 		*/
-		$updateStr = "UPDATE trades SET alias = '" . $this->db->escape($data['alias']) . "'";
+		$updateStr = "UPDATE trades SET order_num = " . $this->db->escape($data['order_num']);
 		
-		if( !empty($data['mobile']) ){
-			$updateStr .= ", mobile = " . $this->db->escape($data['mobile']);
+		if( !empty($data['message']) ){
+			$updateStr .= ", message = " . $this->db->escape($data['message']);
 		}
-		if( !empty($data['community']) ){
-			$updateStr .= ", community = '" . $this->db->escape($data['community']) . "'";
-		}
-		if( !empty($data['address']) ){
-			$updateStr .= ", address = '" . $this->db->escape($data['address']) . "'";
-		}
-		if( !empty($data['join_time']) ){
-			$updateStr .= ", join_time = '" . $this->db->escape($data['join_time']) . "'";
-		}
-		if( !empty($data['sex']) ){
-			$updateStr .= ", sex = '" . $this->db->escape($data['sex']) . "'";
-		}
-		if( !empty($data['traded_num']) ){
-			$updateStr .= ", traded_num = '" . $this->db->escape($data['traded_num']) . "'";
-		}
-		if( !empty($data['traded_money']) ){
-			$updateStr .= ", traded_money = '" . $this->db->escape($data['traded_money']) . "'";
-		}
-		if( !empty($data['points']) ){
-			$updateStr .= ", points = '" . $this->db->escape($data['points']) . "'";
-		}
-		if( !empty($data['avatar']) ){
-			$updateStr .= ", avatar = '" . $this->db->escape($data['avatar']) . "'";
+		if( !empty($data['deliver_time']) ){
+			$updateStr .= ", deliver_time = '" . $this->db->escape($data['deliver_time']) . "'";
 		}
 		$updateStr .= " WHERE id = " . (int)$id;
 
