@@ -7,7 +7,7 @@ $_['tab_shipping']               = '配送';
 $_['tab_links']                  = '关联';
 
 // Text  
-$_['text_success']               = '成功： 您已成功更新公司信息！';
+$_['text_success']               = '成功：您已成功更新交易信息！';
 $_['text_plus']                  = '+';
 $_['text_minus']                 = '-';
 $_['text_default']               = '默认';

@@ -105,7 +105,7 @@ class ModelTradeTrade extends Model {
 		return $output;
 	}
 
-	public function edit($id, $data) {
+	public function edit($id, $order_num, $data) {
 		/**
 		if( !empty($data['image']) && strpos($data['image'], 'recruit/') === false ) { 
 			$link = $this->uploadImage($data['image']);	
@@ -119,10 +119,10 @@ class ModelTradeTrade extends Model {
 			$this->db->query($updateStr);
 		}
 		*/
-		$updateStr = "UPDATE trades SET order_num = " . $this->db->escape($data['order_num']);
+		$updateStr = "UPDATE trades SET order_num = " . $this->db->escape($order_num);
 		
 		if( !empty($data['message']) ){
-			$updateStr .= ", message = " . $this->db->escape($data['message']);
+			$updateStr .= ", message = '" . $this->db->escape($data['message']) . "'";
 		}
 		if( !empty($data['deliver_time']) ){
 			$updateStr .= ", deliver_time = '" . $this->db->escape($data['deliver_time']) . "'";

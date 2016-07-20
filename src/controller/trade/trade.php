@@ -38,7 +38,7 @@ class ControllerTradeTrade extends Controller {
 		$this->load->model('trade/trade');
 		
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_trade_trade->edit($this->request->get['id'], $this->request->post);
+			$this->model_trade_trade->edit($this->request->get['id'], $this->request->get['order_num'], $this->request->post);
 			
 			$this->session->data['success'] = $this->language->get('text_success');
 			
@@ -302,22 +302,15 @@ class ControllerTradeTrade extends Controller {
       			'separator' => ' :: '
    		);
 		
-		if (!isset($this->request->get['id'])) {
-			$this->data['action'] = $this->url->link('trade/trade/insert', null, 'SSL');
-		} else {
-			$this->data['action'] = $this->url->link('trade/trade/update', http_build_query(array_merge( array('id' =>  $this->request->get['id'] ), $url_params)) , 'SSL');
-		}
-
-		
 		$this->data['cancel'] = $this->url->link('trade/trade', http_build_query($url_params), 'SSL');
 
 		$this->data['token'] = $this->session->data['token'];
 
-
+		/**
 		$this->load->model('localisation/language');
 		
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
-
+		**/
         	// data
         	if (isset($this->request->get['id']) && ($fromInternal == 1 || $this->request->server['REQUEST_METHOD'] != 'POST')) {
             		$item_info = $this->model_trade_trade->getItem($this->request->get['id']);
@@ -326,17 +319,23 @@ class ControllerTradeTrade extends Controller {
         	}
 
         	$this->data['id'] = $this->getWithDefault($item_info, 'id', null);
-        	$this->data['youzan_id'] = $this->getWithDefault($item_info, 'name', '');        
-        	$this->data['order_num'] = $this->getWithDefault($item_info, 'normalized_name', '');        
-       		$this->data['pay_type'] = $this->getWithDefault($item_info, 'overview', '');
-       		$this->data['post_fee'] = $this->getWithDefault($item_info, 'overview_abstract', '');
-       		$this->data['payment'] = $this->getWithDefault($item_info, 'employer_count', '');
-        	$this->data['discount'] = $this->getWithDefault($item_info, 'url', '');
-        	$this->data['total_fee'] = $this->getWithDefault($item_info, 'email', '');
-        	$this->data['message'] = $this->getWithDefault($item_info, 'location', '');
-       		$this->data['status'] = $this->getWithDefault($item_info, 'category', '');
-       		$this->data['consign_time'] = $this->getWithDefault($item_info, 'property', '');
-       		$this->data['deliver_time'] = $this->getWithDefault($item_info, 'scale', '');
+        	$this->data['youzan_id'] = $this->getWithDefault($item_info, 'youzan_id', '');        
+        	$this->data['order_num'] = $this->getWithDefault($item_info, 'order_num', '');        
+       		$this->data['pay_type'] = $this->getWithDefault($item_info, 'pay_type', '');
+       		$this->data['post_fee'] = $this->getWithDefault($item_info, 'post_fee', '');
+       		$this->data['payment'] = $this->getWithDefault($item_info, 'payment', '');
+        	$this->data['discount'] = $this->getWithDefault($item_info, 'discount', '');
+        	$this->data['total_fee'] = $this->getWithDefault($item_info, 'total_fee', '');
+        	$this->data['message'] = $this->getWithDefault($item_info, 'message', '');
+       		$this->data['status'] = $this->getWithDefault($item_info, 'status', '');
+       		$this->data['consign_time'] = $this->getWithDefault($item_info, 'consign_time', '');
+       		$this->data['deliver_time'] = $this->getWithDefault($item_info, 'deliver_time', '');
+
+		if (!isset($this->request->get['id'])) {
+			$this->data['action'] = $this->url->link('trade/trade/insert', null, 'SSL');
+		} else {
+			$this->data['action'] = $this->url->link('trade/trade/update', http_build_query(array_merge( array('id' =>  $this->request->get['id'], 'order_num' => $this->data['order_num'] ), $url_params)) , 'SSL');
+		}
 
 		$this->data['no_image'] = 'no_image.jpg';
         	$image_url = $this->getWithDefault($item_info, 'image', '');
@@ -362,6 +361,7 @@ class ControllerTradeTrade extends Controller {
 	}
 
 	private function validateForm() {
+		/**
 		if (!$this->user->hasPermission('modify', 'trade/trade')) {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
@@ -371,10 +371,10 @@ class ControllerTradeTrade extends Controller {
 		if ((utf8_strlen($name) < 1) || (utf8_strlen($name) > 255)) {
 		    $this->error['name'] = $this->language->get('error_name');
 		}
-		
-		$eNum = $this->request->post['employer_count'];
-		if ( !empty($eNum) && preg_match("/[^\d-]/",$eNum) ) {
-		    $this->error['warning'] = 'employer count must be a number.';
+		**/
+		$dTime = $this->request->post['deliver_time'];
+		if ( !empty($dTime) && !preg_match("/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/",$dTime) ) {
+		    $this->error['warning'] = '错误的时间格式，实例：2016-06-28 08:00:00';
 		}
 		
 		if ($this->error && !isset($this->error['warning'])) {
