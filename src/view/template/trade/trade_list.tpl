@@ -49,7 +49,7 @@
               <td></td>
               <td></td>
               <td></td>
-              <td></td>
+              <td><input type="text" value="2012-05-15 21:05" id="datetimepicker"></td>
               <td><input type="text" style="width: 100px;" name="filter_message" value="<?php echo $filter_message; ?>" /></td>
               <td><input type="text" style="width: 100px;" name="filter_status" value="<?php echo $filter_status; ?>" /></td>
               <td align="right"><a onclick="filter();" class="button">筛选</a></td>
@@ -130,4 +130,10 @@ function filter() {
 }
 
 </script>
+<script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-timepicker-addon.js"></script> 
+<script type="text/javascript"><!--
+$('#datetimepicker').datetimepicker({
+	dateFormat: 'yy-mm-dd',
+	timeFormat: 'h:m'
+});
 <?php echo $footer; ?>
