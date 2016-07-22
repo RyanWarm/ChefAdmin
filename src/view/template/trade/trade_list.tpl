@@ -49,7 +49,8 @@
               <td></td>
               <td></td>
               <td></td>
-              <td><input type="text" readonly class="form_datetime" value="2012-05-15 21:05"></td>
+              <!--td><input type="text" id="datetimepicker"></td-->
+              <td><input type="text" style="width: 210px;" name="filter_deliver_time"></td>
               <td><input type="text" style="width: 100px;" name="filter_message" value="<?php echo $filter_message; ?>" /></td>
               <td><input type="text" style="width: 100px;" name="filter_status" value="<?php echo $filter_status; ?>" /></td>
               <td align="right"><a onclick="filter();" class="button">筛选</a></td>
@@ -130,12 +131,29 @@ function filter() {
 }
 
 </script>
-<script src="view/javascript/jquery.js"></script>
+<!--=script src="view/javascript/jquery.js"></script-->
 <script src="view/javascript/jquery.datetimepicker.full.js"></script>
 <script type="text/javascript">
-$('.form_datetime').datetimepicker({
-	dateFormat: 'yy-mm-dd',
-	timeFormat: 'h:m'
+$.datetimepicker.setLocale('zh');
+$('#datetimepicker').datetimepicker({
+	format:'Y-m-d H:i:00',
+	dayOfWeekStart : 1,
+	lang:'zh',
+	step:10,
+	startDate:'2016-07-21'
+});
+</script>
+<script type="text/javascript">
+$(function() {
+    $('input[name="filter_deliver_time"]').daterangepicker({
+        timePicker: true,
+        timePickerIncrement: 10,
+        locale: {
+	    autoApply: true,
+	    separator: ' ~ ',
+            format: 'YYYY-MM-DD H:mm'
+        }
+    });
 });
 </script>
 <?php echo $footer; ?>
