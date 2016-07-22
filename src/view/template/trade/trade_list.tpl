@@ -49,7 +49,7 @@
               <td></td>
               <td></td>
               <td></td>
-              <td><input type="text" class="form_datetime" value="2012-05-15 21:05" id="datetimepicker"></td>
+              <td><input type="text" readonly class="form_datetime" value="2012-05-15 21:05"></td>
               <td><input type="text" style="width: 100px;" name="filter_message" value="<?php echo $filter_message; ?>" /></td>
               <td><input type="text" style="width: 100px;" name="filter_status" value="<?php echo $filter_status; ?>" /></td>
               <td align="right"><a onclick="filter();" class="button">筛选</a></td>
@@ -130,6 +130,8 @@ function filter() {
 }
 
 </script>
+<script src="view/javascript/jquery.js"></script>
+<script src="view/javascript/jquery.datetimepicker.full.js"></script>
 <script type="text/javascript">
 $('.form_datetime').datetimepicker({
 	dateFormat: 'yy-mm-dd',
