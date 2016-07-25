@@ -1,5 +1,30 @@
 <?php echo $header; ?>
-<div id="content">
+<style>
+@media print{
+  INPUT {
+    display:none
+  }
+  .bgnoprint{
+     background:display:none;
+  }
+  .noprint{
+     display:none
+  }
+  .paging{
+    page-break-after :always
+  }
+  .print_div{
+    font-size:12px;color:#000000;
+  }
+}
+@media screen
+{
+  .print_div{
+    display:none
+  }
+}
+</style>
+<div id="content"  class="noprint">
   <div class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
     <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
@@ -14,7 +39,7 @@
   <div class="box">
     <div class="heading">
       <h1><img src="view/image/category.png" alt="" />当前交易</h1>
-      <div class="buttons"><a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $button_insert; ?></a></div>
+      <div class="buttons"><a onclick="window.print()" class="button">打印订单</a><a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $button_insert; ?></a></div>
     </div>
     <div class="content">
       <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
@@ -91,6 +116,21 @@
       <div class="pagination"><?php echo $pagination; ?></div>
     </div>
   </div>
+</div>
+<div class="print_div">
+  <?php if ($list) { ?>
+    <?php foreach ($list as $item) { ?>
+      姓名：<?php echo $item['youzan_id']; ?><p>
+      送餐时间：<?php echo $item['deliver_time']; ?><p>
+      地址：<?php echo $item['youzan_id']; ?><p>
+      电话：<?php echo $item['youzan_id']; ?><p>
+      留言：<?php echo $item['message']; ?><p>
+      菜品：<p>
+        1. 宫保鸡丁<p>
+        2. 油条<p>
+      <p class="paging"></p>
+    <?php } ?>
+  <?php } ?>
 </div>
 <script>
 $('#form input').keydown(function(e) {
