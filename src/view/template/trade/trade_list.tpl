@@ -50,7 +50,7 @@
               <td></td>
               <td></td>
               <!--td><input type="text" id="datetimepicker"></td-->
-              <td><input type="text" style="width: 210px;" name="filter_deliver_time"></td>
+              <td><input type="text" style="width: 210px;" name="filter_deliver_time" value=""></td>
               <td><input type="text" style="width: 100px;" name="filter_message" value="<?php echo $filter_message; ?>" /></td>
               <td><input type="text" style="width: 100px;" name="filter_status" value="<?php echo $filter_status; ?>" /></td>
               <td align="right"><a onclick="filter();" class="button">筛选</a></td>
@@ -146,6 +146,7 @@ $('#datetimepicker').datetimepicker({
 <script type="text/javascript">
 $(function() {
     $('input[name="filter_deliver_time"]').daterangepicker({
+	autoUpdateInput: false,
         timePicker: true,
         timePickerIncrement: 10,
         locale: {
@@ -155,5 +156,12 @@ $(function() {
         }
     });
 });
+  $('input[name="filter_deliver_time"]').on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('YYYY-MM-DD H:mm') + ' ~ ' + picker.endDate.format('YYYY-MM-DD H:mm'));
+  });
+
+  $('input[name="filter_deliver_time"]').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+  });
 </script>
 <?php echo $footer; ?>
