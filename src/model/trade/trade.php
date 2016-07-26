@@ -196,6 +196,11 @@ class ModelTradeTrade extends Model {
 		    $sql .= " AND LCASE(pay_type) LIKE '%" . $this->db->escape($params['filter_pay_type']) . "%'";
 		}
 
+		if (!empty($params['filter_deliver_time'])) {
+		    list($start_time, $end_time) = split (' ~ ', $params['filter_deliver_time']);
+		    $sql .= " AND LCASE(deliver_time) >= '" . $start_time . "' AND LCASE(deliver_time) <= '" . $end_time . "'";
+		}
+
 		if (!empty($params['filter_message'])) {
 		    $sql .= " AND LCASE(message) LIKE '%" . $this->db->escape($params['filter_message']) . "%'";
 		}
@@ -207,7 +212,11 @@ class ModelTradeTrade extends Model {
 		if (empty($params['sort']) || $for_count) {
 		    $sql .= " ORDER BY id ASC";
 		} else {
-		    $sql .= " ORDER BY " . $params['sort'] . " DESC";
+		    if ('deliver_time' == $params['sort']) {
+			$sql .= " ORDER BY " . $params['sort'] . " ASC";
+		    } else {
+			$sql .= " ORDER BY " . $params['sort'] . " DESC";
+		    }
 		}
 
 		if (!$for_count) {

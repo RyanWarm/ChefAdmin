@@ -120,14 +120,15 @@
 <div class="print_div">
   <?php if ($list) { ?>
     <?php foreach ($list as $item) { ?>
-      姓名：<?php echo $item['youzan_id']; ?><p>
+      姓名：<?php echo $item['alias']; ?><p>
       送餐时间：<?php echo $item['deliver_time']; ?><p>
-      地址：<?php echo $item['youzan_id']; ?><p>
-      电话：<?php echo $item['youzan_id']; ?><p>
+      地址：<?php echo $item['address']; ?><p>
+      电话：<?php echo $item['mobile']; ?><p>
       留言：<?php echo $item['message']; ?><p>
       菜品：<p>
-        1. 宫保鸡丁<p>
-        2. 油条<p>
+	<?php foreach ($item['orders'] as $order) { ?>
+		--- <?php echo $order['name']; ?> (<?php echo $order['num']; ?> 份)<p>
+    	<?php } ?>
       <p class="paging"></p>
     <?php } ?>
   <?php } ?>
@@ -155,6 +156,11 @@ function filter() {
 	var filter_pay_type = $('input[name=\'filter_pay_type\']').attr('value');
 	if (filter_pay_type) {
 		url += '&filter_pay_type=' + encodeURIComponent(filter_pay_type);
+	}
+
+	var filter_deliver_time = $('input[name=\'filter_deliver_time\']').attr('value');
+	if (filter_deliver_time) {
+		url += '&filter_deliver_time=' + encodeURIComponent(filter_deliver_time) + '&sort=deliver_time';
 	}
 
 	var filter_message = $('input[name=\'filter_message\']').attr('value');

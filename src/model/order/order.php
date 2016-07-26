@@ -190,6 +190,12 @@ class ModelOrderOrder extends Model {
         	return $query->row;
     	}
 
+	public function getListByTid($id) {
+        	$query = $this->db->query("SELECT * FROM orders WHERE tid = '" .$this->db->escape($id) . "'");
+
+        	return $query->rows;
+    	}
+
 	public function getGiftImage($image_id) {
 		$query = $this->db->query("SELECT * FROM gift_image WHERE image_id = '" . (int)$image_id . "'");
 		

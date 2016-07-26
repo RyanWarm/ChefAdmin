@@ -84,6 +84,10 @@ class ControllerTradeTrade extends Controller {
 			$params['filter_pay_type'] = $this->request->get['filter_pay_type'];
 		}
 
+		if (isset($this->request->get['filter_deliver_time'])) {
+			$params['filter_deliver_time'] = $this->request->get['filter_deliver_time'];
+		}
+
 		if (isset($this->request->get['filter_message'])) {
 			$params['filter_message'] = $this->request->get['filter_message'];
 		}
@@ -149,6 +153,9 @@ class ControllerTradeTrade extends Controller {
 		$filter_pay_type = $this->request->get('filter_pay_type');
 		$this->data['filter_pay_type'] = $filter_pay_type;
 
+		$filter_deliver_time = $this->request->get('filter_deliver_time');
+		$this->data['filter_deliver_time'] = $filter_deliver_time;
+
 		$filter_message = $this->request->get('filter_message');
 		$this->data['filter_message'] = $filter_message;
 
@@ -189,6 +196,7 @@ class ControllerTradeTrade extends Controller {
                               'filter_id' => $filter_id,
                               'filter_youzan_id' => $filter_youzan_id,
                               'filter_pay_type' => $filter_pay_type,
+                              'filter_deliver_time' => $filter_deliver_time,
                               'filter_message' => $filter_message,
                               'filter_status' => $filter_status,
                               'sort' => $sort,
@@ -202,6 +210,8 @@ class ControllerTradeTrade extends Controller {
 		$this->data['list'] = array();
 
 		$this->load->model('tool/image');
+		$this->load->model('customer/customer');
+		$this->load->model('order/order');
  
 		foreach ($results as $result) {
 			$action = array();
@@ -211,14 +221,22 @@ class ControllerTradeTrade extends Controller {
 				'href' => $this->url->link('trade/trade/update', http_build_query( array_merge( array('id' => $result['id'] ),  $url_params)), 'SSL')
 			);
 
+            		$user_info = $this->model_customer_customer->getItem($result['youzan_id']);
+            		$order_info = $this->model_order_order->getListByTid($result['tid']);
+
             		$this->data['list'][] = array_merge(
                 		$result, 
                 		array('selected' => isset($this->request->post['selected']) && in_array($result['zid'], $this->request->post['selected']), 
-                      		'action' => $action));
+                      			'action' => $action,
+					'alias' => $user_info['alias'],
+					'address' => $user_info['address'],
+					'mobile' => $user_info['mobile'],
+					'orders' => $order_info
+				));
 		}
 
-        // render page list
-        $page_url_params = $this->generateURL();
+		// render page list
+		$page_url_params = $this->generateURL();
 
 		$pagination = new Pagination();
 		$pagination->total = $this->model_trade_trade->getTotalCount($query_params);
@@ -229,7 +247,7 @@ class ControllerTradeTrade extends Controller {
 
 		$this->data['pagination'] = $pagination->render();
 		
-        // output
+		// output
 		$this->template = 'trade/trade_list.tpl';
 		$this->children = array(
 			'common/header',
