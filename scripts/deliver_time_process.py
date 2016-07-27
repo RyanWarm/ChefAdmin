@@ -368,11 +368,17 @@ def process_deliver_time():
     vals = json.loads(fi.readline())
     res = vals['response']['trades']
     print len(res)
+
+    current_time = datetime.now()
+    baseline_time = current_time - timedelta(7)
+    baseline_time = baseline_time.strftime("%Y-%m-%d %H:%M:%S") 
     
     num = 0
     break_list = ['时', '.', '点', ':', '：']
     #res = [{'buyer_message':'做好随时可以送，12点前。谢谢'.decode('utf-8'), 'pay_time': '2016-07-18 11:11:28', 'title':'周一午餐'.decode('utf-8')}]
     for trade in res:
+        if trade['pay_time'] < baseline_time:
+            continue
         message = trade['buyer_message']
         valid = True
         bk = '$'
@@ -398,8 +404,8 @@ def process_deliver_time():
 
         num += 1
         pay_time = datetime.strptime(trade['pay_time'], "%Y-%m-%d %H:%M:%S")
-        left = '-'
-        right = '-'
+        left = -1
+        right = -1
 
         weekday = -1
         dish = -1
@@ -411,35 +417,78 @@ def process_deliver_time():
             if key.decode('utf-8') in trade['title']:
                 dish = dishes[key]
                 break
-        
+
         if '$' != bk:
             print bk
             vals = message.split(bk)
+
+            # Left process for chinese string
+            for ht in hours_three:
+                if vals[0].endswith(ht.decode('utf-8')):
+                    left = hours_three[ht]
+                    break
+            if -1 == left:
+                for htwo in hours_two:
+                    if vals[0].endswith(htwo.decode('utf-8')):
+                        left = hours_two[htwo]
+                        break
+            if -1 == left:
+                for hone in hours_one:
+                    if vals[0].endswith(hone.decode('utf-8')):
+                        left = hours_one[hone]
+                        break
+
+            # Right process for chinese string
+            for mt in minutes_three:
+                if vals[1].startswith(mt.decode('utf-8')):
+                    right = minutes_three[mt]
+                    break
+            if -1 == right:
+                for mtwo in minutes_two:
+                    if vals[1].startswith(mtwo.decode('utf-8')):
+                        right = minutes_two[mtwo]
+                        break
+            if -1 == right:
+                for mone in minutes_one:
+                    if vals[1].startswith(mone.decode('utf-8')):
+                        right = minutes_one[mone]
+                        break
+
             vals[0] = vals[0][-2:]
             vals[1] = vals[1][:2]
-            left = filter(lambda ch: ch in '0123456789', vals[0])
-            right = filter(lambda ch: ch in '0123456789', vals[1])
+            left_str = filter(lambda ch: ch in '0123456789', vals[0])
+            right_str = filter(lambda ch: ch in '0123456789', vals[1])
             #dTime = left + ':' + right
             #print dTime
 
         if -1 == dish:
             continue
 
-        if '-' == left:
-            if 0 == dish:
-                left = 7
-                right = 30
-            elif 1 == dish:
-                left = 12
-                right = 0
-            else:
-                left = 18
-                right = 0
+        if -1 == left:
+            if '' == left_str:
+                #set default time according to dish types
+                if 0 == dish:
+                    left = 7
+                    right = 30
+                elif 1 == dish:
+                    left = 12
+                    right = 0
+                else:
+                    left = 18
+                    right = 0
+            else:   
+                if int(left_str) > 23:
+                    left = int(left_str) % 10
+                else:
+                    left = int(left_str)
 
-        if int(left) > 23:
-            left = int(left) % 10
-        if '-' == right:
-            right = 0
+        if -1 == right:
+            if '' == right_str:
+                right = 0
+            elif int(right_str) > 59:
+                right = int(right_str) % 60
+            else:
+                right = int(right_str)
 
         dTime = datetime(pay_time.year, pay_time.month, pay_time.day, int(left), int(right), 0)
         #now = datetime.now()
