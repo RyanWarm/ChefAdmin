@@ -364,7 +364,7 @@ def process_deliver_time():
     res = cur.fetchall()
     print len(res)
     """
-    fi = open('order_20160726.json','r')
+    fi = open('order_20160727.json','r')
     vals = json.loads(fi.readline())
     res = vals['response']['trades']
     print len(res)
@@ -406,6 +406,8 @@ def process_deliver_time():
         pay_time = datetime.strptime(trade['pay_time'], "%Y-%m-%d %H:%M:%S")
         left = -1
         right = -1
+        left_str = '$'
+        right_str = '$'
 
         weekday = -1
         dish = -1
@@ -464,8 +466,9 @@ def process_deliver_time():
         if -1 == dish:
             continue
 
+        print "Left: " + str(left) + ", Dish: " + str(dish) + ", LeftStr: " + left_str
         if -1 == left:
-            if '' == left_str:
+            if '$' == left_str or '' == left_str:
                 #set default time according to dish types
                 if 0 == dish:
                     left = 7
@@ -483,7 +486,7 @@ def process_deliver_time():
                     left = int(left_str)
 
         if -1 == right:
-            if '' == right_str:
+            if '' == right_str or '$' == right_str:
                 right = 0
             elif int(right_str) > 59:
                 right = int(right_str) % 60
@@ -518,6 +521,14 @@ def process_deliver_time():
 
             #print left
         dTime = datetime(dTime.year, dTime.month, dTime.day, int(new_left), int(right), 0)
+
+        #adjust according to fast deliver
+        if '' != message:
+            for adj_str in adjust_strs:
+                if adj_str.decode('utf-8') in message:
+                    print "====Adjust to fast deliver===="
+                    dTime = pay_time + timedelta(minutes=30)
+
         print dTime
         
         sql = "UPDATE trades SET deliver_time = '" + dTime.strftime("%Y-%m-%d %H:%M:%S") + "' WHERE tid = '" + trade['tid'] + "';"
@@ -543,6 +554,18 @@ if __name__ == "__main__":
     
     weekdays = {'周日':6, '周一':0, '周二':1, '周三':2, '周四':3, '周五':4, '周六':5}
     dishes = {'早餐':0, '午餐':1, '晚餐':2}
+    hours_three = {'二十一':21, '二十二':22, '二十三':23}
+    hours_two = {'十一':11, '十二':12, '十三':13, '十四':14, '十五':15, '十六':16, '十七':17, '十八':18, '十九':19, '二十':20}
+    hours_one = {'一':1, '二':2, '三':3, '四':4, '五':5, '六':6, '七':7, '八':8, '九':9, '十':10, '两':2}
+    minutes_three = {'二十一':21, '二十二':22, '二十三':23, '二十四':24, '二十五':25, '二十六':26, '二十七':27, '二十八':28, '二十九':29}
+    minutes_three.update({'三十一':31, '三十二':32, '三十三':33, '三十四':34, '三十五':35, '三十六':36, '三十七':37, '三十八':38, '三十九':39})
+    minutes_three.update({'四十一':41, '四十二':42, '四十三':43, '四十四':44, '四十五':45, '四十六':46, '四十七':47, '四十八':48, '四十九':49})
+    minutes_three.update({'五十一':51, '五十二':52, '五十三':53, '五十四':54, '五十五':55, '五十六':56, '五十七':57, '五十八':58, '五十九':59})
+    minutes_two = {'零一':1, '零二':2, '零三':3, '零四':4, '零五':5, '零六':6, '零七':7, '零八':8, '零九':9, '十分':10, '一刻':15}
+    minutes_two.update({'十一':11, '十二':12, '十三':13, '十四':14, '十五':15, '十六':16, '十七':17, '十八':18, '十九':19})
+    minutes_two.update({'二十':20, '三十':30, '四十':40, '五十':50})
+    minutes_one = {'半':30}
+    adjust_strs = ['尽快', '马上', '立刻']
 
     process_deliver_time()
 
