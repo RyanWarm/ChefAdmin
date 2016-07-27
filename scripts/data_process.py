@@ -369,7 +369,7 @@ def process_deliver_time(trades):
     current_time = datetime.now()
     baseline_time = current_time - timedelta(7)
     baseline_time = baseline_time.strftime("%Y-%m-%d %H:%M:%S") 
-
+    
     num = 0
     break_list = ['时', '.', '点', ':', '：']
     #res = [{'buyer_message':'做好随时可以送，12点前。谢谢'.decode('utf-8'), 'pay_time': '2016-07-18 11:11:28', 'title':'周一午餐'.decode('utf-8')}]
@@ -388,7 +388,7 @@ def process_deliver_time(trades):
             if message.count(breaker) == 1:
                 bk = breaker
 
-        if not valid or '$' == bk:
+        if not valid:
             continue
         """
         if (':' not in trade['buyer_message'] and '：'.decode('utf-8') not in trade['buyer_message']) or trade['buyer_message'].count(':') > 1 or trade['buyer_message'].count('：'.decode('utf-8')) > 1:
@@ -401,53 +401,10 @@ def process_deliver_time(trades):
 
         num += 1
         pay_time = datetime.strptime(trade['pay_time'], "%Y-%m-%d %H:%M:%S")
-        vals = message.split(bk)
-        """
-        half = False
-        if vals[1].startswith('半'.decode('utf-8')):
-            half = True
-        """
         left = -1
         right = -1
-
-        # Left process for chinese string
-        for ht in hours_three:
-            if vals[0].endswith(ht.decode('utf-8')):
-                left = hours_three[ht]
-                break
-        if -1 == left:
-            for htwo in hours_two:
-                if vals[0].endswith(htwo.decode('utf-8')):
-                    left = hours_two[htwo]
-                    break
-        if -1 == left:
-            for hone in hours_one:
-                if vals[0].endswith(hone.decode('utf-8')):
-                    left = hours_one[hone]
-                    break
-
-        # Right process for chinese string
-        for mt in minutes_three:
-            if vals[1].startswith(mt.decode('utf-8')):
-                right = minutes_three[mt]
-                break
-        if -1 == right:
-            for mtwo in minutes_two:
-                if vals[1].startswith(mtwo.decode('utf-8')):
-                    right = minutes_two[mtwo]
-                    break
-        if -1 == right:
-            for mone in minutes_one:
-                if vals[1].startswith(mone.decode('utf-8')):
-                    right = minutes_one[mone]
-                    break
-
-        vals[0] = vals[0][-2:]
-        vals[1] = vals[1][:2]
-        left_str = filter(lambda ch: ch in '0123456789', vals[0])
-        right_str = filter(lambda ch: ch in '0123456789', vals[1])
-        #dTime = left + ':' + right
-        #print dTime
+        left_str = '$'
+        right_str = '$'
 
         weekday = -1
         dish = -1
@@ -460,17 +417,72 @@ def process_deliver_time(trades):
                 dish = dishes[key]
                 break
 
-        if -1 == left and '' == left_str:
+        if '$' != bk:
+            #print bk
+            vals = message.split(bk)
+
+            # Left process for chinese string
+            for ht in hours_three:
+                if vals[0].endswith(ht.decode('utf-8')):
+                    left = hours_three[ht]
+                    break
+            if -1 == left:
+                for htwo in hours_two:
+                    if vals[0].endswith(htwo.decode('utf-8')):
+                        left = hours_two[htwo]
+                        break
+            if -1 == left:
+                for hone in hours_one:
+                    if vals[0].endswith(hone.decode('utf-8')):
+                        left = hours_one[hone]
+                        break
+
+            # Right process for chinese string
+            for mt in minutes_three:
+                if vals[1].startswith(mt.decode('utf-8')):
+                    right = minutes_three[mt]
+                    break
+            if -1 == right:
+                for mtwo in minutes_two:
+                    if vals[1].startswith(mtwo.decode('utf-8')):
+                        right = minutes_two[mtwo]
+                        break
+            if -1 == right:
+                for mone in minutes_one:
+                    if vals[1].startswith(mone.decode('utf-8')):
+                        right = minutes_one[mone]
+                        break
+
+            vals[0] = vals[0][-2:]
+            vals[1] = vals[1][:2]
+            left_str = filter(lambda ch: ch in '0123456789', vals[0])
+            right_str = filter(lambda ch: ch in '0123456789', vals[1])
+            #dTime = left + ':' + right
+            #print dTime
+
+        if -1 == dish:
             continue
 
         if -1 == left:
-            if int(left_str) > 23:
-                left = int(left_str) % 10
-            else:
-                left = int(left_str)
+            if '$' == left_str or '' == left_str:
+                #set default time according to dish types
+                if 0 == dish:
+                    left = 7
+                    right = 30
+                elif 1 == dish:
+                    left = 12
+                    right = 0
+                else:
+                    left = 18
+                    right = 0
+            else:   
+                if int(left_str) > 23:
+                    left = int(left_str) % 10
+                else:
+                    left = int(left_str)
 
-        if -1 == right: 
-            if '' == right_str:
+        if -1 == right:
+            if '' == right_str or '$' == right_str:
                 right = 0
             elif int(right_str) > 59:
                 right = int(right_str) % 60
@@ -480,20 +492,20 @@ def process_deliver_time(trades):
         dTime = datetime(pay_time.year, pay_time.month, pay_time.day, int(left), int(right), 0)
         #now = datetime.now()
         weekday_now = dTime.weekday()
-
+        
         if False:
             print weekday_now
             print pay_time
             print weekday
             print dish
-
+            
         if -1 != weekday:
             day_diff = weekday - weekday_now
             if 0 > day_diff:
                 day_diff += 7
             #print "diff" + str(day_diff)
             dTime = dTime + timedelta(day_diff)
-
+            
         new_left = left
         if -1 != dish:
             if 1 == dish and int(left) < 6:
@@ -505,10 +517,19 @@ def process_deliver_time(trades):
 
             #print left
         dTime = datetime(dTime.year, dTime.month, dTime.day, int(new_left), int(right), 0)
-        #print dTime
 
+        #adjust according to fast deliver
+        if '' != message:
+            for adj_str in adjust_strs:
+                if adj_str.decode('utf-8') in message:
+                    print "====Adjust to fast deliver===="
+                    dTime = pay_time + timedelta(minutes=30)
+
+        print dTime
+        
         sql = "UPDATE trades SET deliver_time = '" + dTime.strftime("%Y-%m-%d %H:%M:%S") + "' WHERE tid = '" + trade['tid'] + "';"
-        #print sql
+        print sql
+        #print "++++++++++++++++++++"
         cur.execute(sql)
 
 if __name__ == "__main__":
@@ -540,6 +561,7 @@ if __name__ == "__main__":
     minutes_two.update({'十一':11, '十二':12, '十三':13, '十四':14, '十五':15, '十六':16, '十七':17, '十八':18, '十九':19})
     minutes_two.update({'二十':20, '三十':30, '四十':40, '五十':50})
     minutes_one = {'半':30}
+    adjust_strs = ['尽快', '马上', '立刻']
 
     if hour > 4 and hour < 22:
         # update trade info every 5 minutes during 5:00am to 10:00pm
