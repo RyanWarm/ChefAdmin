@@ -39,7 +39,7 @@
   <div class="box">
     <div class="heading">
       <h1><img src="view/image/category.png" alt="" />当前交易</h1>
-      <div class="buttons"><a onclick="window.print()" class="button">打印订单</a><a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $button_insert; ?></a></div>
+      <div class="buttons"><a id="print_list" class="button">打印列表</a><a onclick="window.print()" class="button">打印订单</a><a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $button_insert; ?></a></div>
     </div>
     <div class="content">
       <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
@@ -117,7 +117,7 @@
     </div>
   </div>
 </div>
-<div class="print_div">
+<div id="order_detail" class="print_div">
   <?php if ($list) { ?>
     <?php foreach ($list as $item) { ?>
       姓名：<?php echo $item['alias']; ?><p>
@@ -209,5 +209,13 @@ $(function() {
   $('input[name="filter_deliver_time"]').on('cancel.daterangepicker', function(ev, picker) {
       $(this).val('');
   });
+</script>
+
+<script type="text/javascript">
+  $('#print_list').click(function(){
+    $('#content').removeClass().addClass('print_div');
+    $('#order_detail').removeClass().addClass('noprint');
+    window.print();
+  })
 </script>
 <?php echo $footer; ?>
