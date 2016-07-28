@@ -52,11 +52,11 @@
               <td class="left"><label class="print_div">菜品数量</label><a class="noprint" href="index.php?route=trade/trade&sort=order_num">菜品数量↓</a></td>
               <td class="left">支付类型</td>
               <!--td class="left"><a href="index.php?route=trade/trade&sort=post_fee">送餐费用↓</a></td-->
-              <td class="left"><a href="index.php?route=trade/trade&sort=payment">支付金额↓</a></td>
+              <td class="left"><label class="print_div">支付金额</label><a class="noprint" href="index.php?route=trade/trade&sort=payment">支付金额↓</a></td>
               <!--td class="left"><a href="index.php?route=trade/trade&sort=discount">折扣↓</a></td>
               <td class="left"><a href="index.php?route=trade/trade&sort=total_fee">总价↓</a></td-->
-              <td class="left"><a href="index.php?route=trade/trade&sort=consign_time">交易时间↓</a></td>
-              <td class="left"><a href="index.php?route=trade/trade&sort=deliver_time">送餐时间↓</a></td>
+              <td class="left"><label class="print_div">交易时间</label><a class="noprint" href="index.php?route=trade/trade&sort=consign_time">交易时间↓</a></td>
+              <td class="left"><label class="print_div">送餐时间</label><a class="noprint" href="index.php?route=trade/trade&sort=deliver_time">送餐时间↓</a></td>
               <td class="left">留言</td>
               <td class="left">地址</td>
               <td class="left">电话</td>
@@ -64,7 +64,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="filter">
+            <tr class="filter noprint">
               <td></td>
               <td><input type="text" style="width: 40px;" name="filter_id" value="<?php echo $filter_id; ?>" /></td>
               <td><input type="text" style="width: 100px;" name="filter_youzan_id" value="<?php echo $filter_youzan_id; ?>" /></td>
@@ -91,8 +91,8 @@
                 <input type="checkbox" name="selected[]" value="<?php echo $item['id']; ?>" />
                 <?php } ?></td>
               <td class="left"><?php echo $item['id']; ?></td>
-              <td class="left"><a target="_blank" href="index.php?route=customer/customer&filter_id=<?php echo $item['youzan_id']; ?>"><?php echo $item['alias']; ?></a></td>
-              <td class="left"><a target="_blank" href="index.php?route=order/order&filter_tid=<?php echo $item['tid']; ?>"><?php echo $item['order_num']; ?></a></td>
+              <td class="left"><label class="print_div"><?php echo $item['alias']; ?></label><a class="noprint" target="_blank" href="index.php?route=customer/customer&filter_id=<?php echo $item['youzan_id']; ?>"><?php echo $item['alias']; ?></a></td>
+              <td class="left"><label class="print_div"><?php echo $item['order_num']; ?></label><a class="noprint" target="_blank" href="index.php?route=order/order&filter_tid=<?php echo $item['tid']; ?>"><?php echo $item['order_num']; ?></a></td>
               <td class="left"><?php echo $item['pay_type']; ?></td>
               <!--td class="left"><?php echo $item['post_fee']; ?></td-->        
               <td class="left"><?php echo $item['payment']; ?></td>
@@ -103,7 +103,7 @@
               <td class="left" title="<?php echo $item['message']; ?>"><?php echo substr($item['message'], 0, 60); ?></td>
               <td class="left"><?php echo $item['address']; ?></td>
               <td class="left"><?php echo $item['mobile']; ?></td>
-              <td class="right"><?php foreach ($item['action'] as $action) { ?>
+              <td class="right noprint"><?php foreach ($item['action'] as $action) { ?>
                 [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
                 <?php } ?></td>
             </tr>
