@@ -25,19 +25,19 @@
 }
 </style>
 <div id="content"  class="noprint">
-  <div class="breadcrumb">
+  <div class="breadcrumb noprint">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
     <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
     <?php } ?>
   </div>
   <?php if ($error_warning) { ?>
-  <div class="warning"><?php echo $error_warning; ?></div>
+  <div class="warning noprint"><?php echo $error_warning; ?></div>
   <?php } ?>
   <?php if ($success) { ?>
-  <div class="success"><?php echo $success; ?></div>
+  <div class="success noprint"><?php echo $success; ?></div>
   <?php } ?>
   <div class="box">
-    <div class="heading">
+    <div class="heading noprint">
       <h1><img src="view/image/category.png" alt="" />当前交易</h1>
       <div class="buttons"><a id="print_list" class="button">打印列表</a><a onclick="window.print()" class="button">打印订单</a><a onclick="location = '<?php echo $insert; ?>'" class="button"><?php echo $button_insert; ?></a></div>
     </div>
@@ -49,16 +49,17 @@
               <td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
               <td class="left">ID</td>
               <td class="left">用户ID</td>
-              <td class="left"><a href="index.php?route=trade/trade&sort=order_num">菜品数量↓</a></td>
+              <td class="left"><label class="print_div">菜品数量</label><a class="noprint" href="index.php?route=trade/trade&sort=order_num">菜品数量↓</a></td>
               <td class="left">支付类型</td>
-              <td class="left"><a href="index.php?route=trade/trade&sort=post_fee">送餐费用↓</a></td>
+              <!--td class="left"><a href="index.php?route=trade/trade&sort=post_fee">送餐费用↓</a></td-->
               <td class="left"><a href="index.php?route=trade/trade&sort=payment">支付金额↓</a></td>
-              <td class="left"><a href="index.php?route=trade/trade&sort=discount">折扣↓</a></td>
-              <td class="left"><a href="index.php?route=trade/trade&sort=total_fee">总价↓</a></td>
+              <!--td class="left"><a href="index.php?route=trade/trade&sort=discount">折扣↓</a></td>
+              <td class="left"><a href="index.php?route=trade/trade&sort=total_fee">总价↓</a></td-->
               <td class="left"><a href="index.php?route=trade/trade&sort=consign_time">交易时间↓</a></td>
               <td class="left"><a href="index.php?route=trade/trade&sort=deliver_time">送餐时间↓</a></td>
               <td class="left">留言</td>
-              <td class="left">订单状态</td>
+              <td class="left">地址</td>
+              <td class="left">电话</td>
               <td class="right"><?php echo $column_action; ?></td>
             </tr>
           </thead>
@@ -69,15 +70,16 @@
               <td><input type="text" style="width: 100px;" name="filter_youzan_id" value="<?php echo $filter_youzan_id; ?>" /></td>
               <td></td>
               <td><input type="text" style="width: 100px;" name="filter_pay_type" value="<?php echo $filter_pay_type; ?>" /></td>
+              <!--td></td>
               <td></td>
-              <td></td>
-              <td></td>
+              <td></td-->
               <td></td>
               <td></td>
               <!--td><input type="text" id="datetimepicker"></td-->
               <td><input type="text" style="width: 210px;" name="filter_deliver_time" value=""></td>
               <td><input type="text" style="width: 100px;" name="filter_message" value="<?php echo $filter_message; ?>" /></td>
-              <td><input type="text" style="width: 100px;" name="filter_status" value="<?php echo $filter_status; ?>" /></td>
+              <td><input type="text" style="width: 100px;" name="filter_address" value="<?php echo $filter_address; ?>" /></td>
+              <td></td>
               <td align="right"><a onclick="filter();" class="button">筛选</a></td>
             </tr>
             <?php if ($list) { ?>
@@ -89,17 +91,18 @@
                 <input type="checkbox" name="selected[]" value="<?php echo $item['id']; ?>" />
                 <?php } ?></td>
               <td class="left"><?php echo $item['id']; ?></td>
-              <td class="left"><a target="_blank" href="index.php?route=customer/customer&filter_id=<?php echo $item['youzan_id']; ?>"><?php echo $item['youzan_id']; ?></a></td>
+              <td class="left"><a target="_blank" href="index.php?route=customer/customer&filter_id=<?php echo $item['youzan_id']; ?>"><?php echo $item['alias']; ?></a></td>
               <td class="left"><a target="_blank" href="index.php?route=order/order&filter_tid=<?php echo $item['tid']; ?>"><?php echo $item['order_num']; ?></a></td>
               <td class="left"><?php echo $item['pay_type']; ?></td>
-              <td class="left"><?php echo $item['post_fee']; ?></td>        
+              <!--td class="left"><?php echo $item['post_fee']; ?></td-->        
               <td class="left"><?php echo $item['payment']; ?></td>
-              <td class="left"><?php echo $item['discount']; ?></td>
-              <td class="left"><?php echo $item['total_fee']; ?></td>
+              <!--td class="left"><?php echo $item['discount']; ?></td>
+              <td class="left"><?php echo $item['total_fee']; ?></td-->
               <td class="left"><?php echo $item['consign_time']; ?></td>
               <td class="left"><?php echo $item['deliver_time']; ?></td>
-              <td class="left"><?php echo $item['message']; ?></td>
-              <td class="left"><?php echo $item['status']; ?></td>
+              <td class="left" title="<?php echo $item['message']; ?>"><?php echo substr($item['message'], 0, 60); ?></td>
+              <td class="left"><?php echo $item['address']; ?></td>
+              <td class="left"><?php echo $item['mobile']; ?></td>
               <td class="right"><?php foreach ($item['action'] as $action) { ?>
                 [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
                 <?php } ?></td>
@@ -113,7 +116,7 @@
           </tbody>
         </table>
       </form>
-      <div class="pagination"><?php echo $pagination; ?></div>
+      <div class="pagination noprint"><?php echo $pagination; ?></div>
     </div>
   </div>
 </div>
@@ -216,6 +219,8 @@ $(function() {
     $('#content').removeClass().addClass('print_div');
     $('#order_detail').removeClass().addClass('noprint');
     window.print();
+    $('#content').removeClass().addClass('noprint');
+    $('#order_detail').removeClass().addClass('print_div');
   })
 </script>
 <?php echo $footer; ?>
