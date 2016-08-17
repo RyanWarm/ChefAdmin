@@ -46,7 +46,7 @@
         <table class="list">
           <thead>
             <tr>
-              <td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
+              <td class="noprint" width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
               <td class="left">ID</td>
               <td class="left">用户ID</td>
               <td class="left"><label class="print_div">菜品数量</label><a class="noprint" href="index.php?route=trade/trade&sort=order_num">菜品数量↓</a></td>
@@ -77,15 +77,15 @@
               <td></td>
               <!--td><input type="text" id="datetimepicker"></td-->
               <td><input type="text" style="width: 210px;" name="filter_deliver_time" value=""></td>
-              <td><input type="text" style="width: 100px;" name="filter_message" value="<?php echo $filter_message; ?>" /></td>
-              <td><input type="text" style="width: 100px;" name="filter_address" value="<?php echo $filter_address; ?>" /></td>
+              <td><input type="text" style="width: 200px;" name="filter_message" value="<?php echo $filter_message; ?>" /></td>
+              <td><input type="text" style="width: 200px;" name="filter_address" value="<?php echo $filter_address; ?>" /></td>
               <td></td>
               <td align="right"><a onclick="filter();" class="button">筛选</a></td>
             </tr>
             <?php if ($list) { ?>
             <?php foreach ($list as $item) { ?>
             <tr>
-              <td style="text-align: center;"><?php if ($item['selected']) { ?>
+              <td class="noprint" style="text-align: center;"><?php if ($item['selected']) { ?>
                 <input type="checkbox" name="selected[]" value="<?php echo $item['id']; ?>" checked="checked" />
                 <?php } else { ?>
                 <input type="checkbox" name="selected[]" value="<?php echo $item['id']; ?>" />
@@ -103,8 +103,8 @@
               <td class="left" title="<?php echo $item['message']; ?>"><?php echo substr($item['message'], 0, 60); ?></td>
               <td class="left"><?php echo $item['address']; ?></td>
               <td class="left"><?php echo $item['mobile']; ?></td>
-              <td class="right noprint"><?php foreach ($item['action'] as $action) { ?>
-                [ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
+              <td class="right"><?php foreach ($item['action'] as $action) { ?>
+                [ <a class="noprint" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
                 <?php } ?></td>
             </tr>
             <?php } ?>
@@ -132,7 +132,10 @@
 	<?php foreach ($item['orders'] as $order) { ?>
 		--- <?php echo $order['name']; ?> (<?php echo $order['num']; ?> 份)<p>
     	<?php } ?>
-      <p class="paging"></p>
+      <p>
+      ============== 我是分割线 ==============
+      <p>
+      <!--p class="paging"></p-->
     <?php } ?>
   <?php } ?>
 </div>
@@ -171,9 +174,9 @@ function filter() {
 		url += '&filter_message=' + encodeURIComponent(filter_message);
 	}
 
-	var filter_status = $('input[name=\'filter_status\']').attr('value');
-	if (filter_status) {
-		url += '&filter_status=' + encodeURIComponent(filter_status);
+	var filter_address = $('input[name=\'filter_address\']').attr('value');
+	if (filter_address) {
+		url += '&filter_address=' + encodeURIComponent(filter_address);
 	}
 
   location = url;

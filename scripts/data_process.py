@@ -17,6 +17,7 @@ from datetime import datetime,timedelta, date
 import MySQLdb
 import json
 import sys
+import os
 #from sae.storage import Bucket
 import traceback
 
@@ -68,7 +69,7 @@ def construct_url(params):
 
     tail = tail.replace(' ', '%20') #urllib.quote(tail)
     url = 'https://open.koudaitong.com/api/entry?sign=' + dig + '&' + tail
-    print url
+    #print url
 
     return url
 
@@ -163,7 +164,7 @@ def users_injection(users):
                 sql = "UPDATE users SET traded_num = " + str(traded_num)
                 sql += ", traded_money = " + str(traded_money)
                 sql += ", points = " + str(points)
-                sql += " WHERE open_id = '" + open_id + "'"
+                sql += " WHERE open_id = '" + open_id + "';"
                 update_users += 1
             else:
                 sql = "INSERT INTO `users` (`open_id`, `youzan_id`, `alias`, `join_time`, `sex`, `traded_num`, `traded_money`, `points`, `avatar`) VALUES ('"
@@ -269,16 +270,6 @@ def trades_injection(trades):
             total_fee = trade['total_fee']
             receiver_name = trade['receiver_name']
             
-            sql = "UPDATE users SET mobile = '" + mobile + "'"
-            if len(receiver_name) > 0:
-                sql += ", name = '" + receiver_name + "'"
-            if len(address) > 0:
-                sql += ", address = '" + address + "'"
-            
-            sql +=  " WHERE youzan_id = '" + youzan_id + "'"
-            #print sql
-            cur.execute(sql)
-
             sql = "SELECT COUNT(*) FROM `trades` WHERE `tid`='%s'" % tid
             cur.execute(sql)
             nor = cur.fetchone()
@@ -286,7 +277,17 @@ def trades_injection(trades):
             if 0 >= nor[0]: #trade information not exists
                 add_trades += 1
                 
-                sql = "INSERT INTO `trades` (`tid`, `youzan_id`, `order_num`, `pay_type`, `district`, `post_fee`, `payment`, `discount`, `total_fee`, `message`, `status`, `consign_time`) VALUES ('"
+                #update user info if new trade
+                sql = "UPDATE users SET mobile = '" + mobile + "'"
+                if len(receiver_name) > 0:
+                    sql += ", name = '" + receiver_name + "'"
+                if len(address) > 0:
+                    sql += ", address = '" + address + "'"
+                
+                sql +=  " WHERE youzan_id = '" + youzan_id + "';"
+                cur.execute(sql)
+                
+                sql = "INSERT INTO `trades` (`tid`, `youzan_id`, `order_num`, `pay_type`, `district`, `post_fee`, `payment`, `discount`, `total_fee`, `message`, `address`, `status`, `consign_time`) VALUES ('"
                 sql +=  tid + "', '"
                 sql += youzan_id + "', "
                 sql += str(order_num) + ", '"
@@ -298,12 +299,11 @@ def trades_injection(trades):
                 #sql += str(adjust_fee) + ", "
                 sql += str(total_fee) + ", '"
                 sql += message + "', '"
+                sql += address + "', '"
                 sql += status + "', '"
                 sql += consign_time + "');"
                 #print sql
-
                 cur.execute(sql)
-                
                 
                 for order in trade['orders']:
                     name = order['title']
@@ -346,6 +346,7 @@ def trades_injection(trades):
                     sql = "UPDATE trades SET pay_type = '" + str(pay_type)
                     sql += "', payment = " + str(payment)
                     sql += ", status = '" + str(status)
+                    sql += "', address = '" + address
                     sql += "', consign_time = '" + str(consign_time)
                     sql += "' WHERE tid = '" + tid + "'"
                     #print sql
@@ -353,6 +354,9 @@ def trades_injection(trades):
     except Exception,ex:
         print Exception,":",ex
         traceback.print_exc()
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, fname, exc_tb.tb_lineno)
 
     print "add %s new trades" % add_trades
     print "update %s existing trades" % modify_trades
@@ -528,7 +532,7 @@ def process_deliver_time(trades):
         print dTime
         
         sql = "UPDATE trades SET deliver_time = '" + dTime.strftime("%Y-%m-%d %H:%M:%S") + "' WHERE tid = '" + trade['tid'] + "';"
-        print sql
+        #print sql
         #print "++++++++++++++++++++"
         cur.execute(sql)
 
@@ -565,11 +569,11 @@ if __name__ == "__main__":
 
     if hour > 4 and hour < 22:
         # update trade info every 5 minutes during 5:00am to 10:00pm
-        get_all_trades_info()
         get_fans_helper()
+        get_all_trades_info()
     elif minute >= 0 and minute <= 4:
-        get_all_trades_info()
         get_fans_helper()
+        get_all_trades_info()
 
     """
     if minute >= 0 and minute <= 4:
@@ -580,4 +584,4 @@ if __name__ == "__main__":
     db.commit()
     db.close()
 
-    print "=========Process Complete: %s==========" % current_time.strftime("%Y-%m-%d 00:00:00") 
+    print "=========Process Complete: %s==========" % current_time.strftime("%Y-%m-%d %H:%M:$S") 

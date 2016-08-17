@@ -92,8 +92,8 @@ class ControllerTradeTrade extends Controller {
 			$params['filter_message'] = $this->request->get['filter_message'];
 		}
 
-		if (isset($this->request->get['filter_status'])) {
-			$params['filter_status'] = $this->request->get['filter_status'];
+		if (isset($this->request->get['filter_address'])) {
+			$params['filter_address'] = $this->request->get['filter_address'];
 		}
 
 		if (isset($this->request->get['sort'])) {
@@ -159,8 +159,8 @@ class ControllerTradeTrade extends Controller {
 		$filter_message = $this->request->get('filter_message');
 		$this->data['filter_message'] = $filter_message;
 
-		$filter_status = $this->request->get('filter_status');
-		$this->data['filter_status'] = $filter_status;
+		$filter_address = $this->request->get('filter_address');
+		$this->data['filter_address'] = $filter_address;
 
 		$sort = $this->request->get('sort');
 			
@@ -198,7 +198,7 @@ class ControllerTradeTrade extends Controller {
                               'filter_pay_type' => $filter_pay_type,
                               'filter_deliver_time' => $filter_deliver_time,
                               'filter_message' => $filter_message,
-                              'filter_status' => $filter_status,
+                              'filter_address' => $filter_address,
                               'sort' => $sort,
                               'order' => $order,
                               'start' => ($page-1) * $this->config->get('config_admin_limit'),
@@ -229,7 +229,6 @@ class ControllerTradeTrade extends Controller {
                 		array('selected' => isset($this->request->post['selected']) && in_array($result['zid'], $this->request->post['selected']), 
                       			'action' => $action,
 					'alias' => $user_info['alias'],
-					'address' => $user_info['address'],
 					'mobile' => $user_info['mobile'],
 					'orders' => $order_info
 				));
